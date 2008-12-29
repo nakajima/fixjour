@@ -1,3 +1,7 @@
 h1. fixjour
 
+Another fixture replacement.
+
+I'll let you know when it's ready.
+
 (c) Copyright 2008 Pat Nakajima, released under MIT License.
