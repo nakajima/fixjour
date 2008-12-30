@@ -166,6 +166,11 @@ describe Fixjour do
         Fixjour.builders.delete(Foo)
       end
       
+      it "can take verify as an option" do
+        mock(Fixjour).verify!.once
+        Fixjour(:verify => true) { }
+      end
+      
       context "when the builder returns an invalid object" do
         before(:each) do
           Fixjour do
