@@ -38,6 +38,10 @@ describe Fixjour do
           new_foo(:name => nil).name.should be_nil
         end
         
+        it "can be made invalid associated objects" do
+          new_foo(:bar => nil).should_not be_valid
+        end
+        
         it "allows access to other builders" do
           bar = new_bar
           mock(self).new_bar { bar }
@@ -99,7 +103,7 @@ describe Fixjour do
         end
       end
       
-      context "declated with a hash" do
+      context "declared with a hash" do
         it "saves the record" do
           bazz = create_bazz
           bazz.should_not be_new_record
