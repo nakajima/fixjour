@@ -8,7 +8,15 @@ Gem::Specification.new do |s|
   s.authors = ["Pat Nakajima"]
   s.date = %q{2008-12-29}
   s.email = %q{patnakajima@gmail.com}
-  s.files = ["lib/core_ext", "lib/core_ext/hash.rb", "lib/fixjour", "lib/fixjour/builders.rb", "lib/fixjour/errors.rb", "lib/fixjour/verify.rb", "lib/fixjour.rb"]
+  s.files = [
+    "lib/core_ext",
+    "lib/core_ext/hash.rb",
+    "lib/fixjour",
+    "lib/fixjour/builders.rb",
+    "lib/fixjour/errors.rb",
+    "lib/fixjour/verify.rb",
+    "lib/fixjour.rb"
+  ]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/nakajima/fixjour}
   s.require_paths = ["lib"]
