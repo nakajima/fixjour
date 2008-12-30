@@ -1,5 +1,17 @@
 module Fixjour
   class << self
+    def evaluate(&block)
+      begin
+        module_eval(&block)
+      rescue NameError => e
+        if evaluator.respond_to?(e.name)
+          raise NonBlockBuilderReference.new("You must use a builder block in order to reference other Fixjour creation methods.")
+        else
+          raise e
+        end
+      end
+    end
+    
     # The list of classes that have builders defined.
     def builders
       @builders ||= Set.new
@@ -44,7 +56,6 @@ module Fixjour
       define_method("new_#{name}") do |*args|
         overrides = args.first || { }
         result = block.bind(self).call(overrides)
-        result = klass.new(result) if result.is_a? Hash
         result
       end
     end
@@ -71,6 +82,14 @@ module Fixjour
         attrs = instance_variable_get("@__valid_#{name}_attrs").merge(overrides)
         attrs.make_indifferent!
         attrs
+      end
+    end
+    
+    def evaluator
+      @evaluator ||= begin
+        klass = Class.new
+        klass.send :include, self
+        klass.new
       end
     end
   end

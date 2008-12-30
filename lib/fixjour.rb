@@ -10,5 +10,5 @@ require 'fixjour/builders'
 # This method is just for prettiness
 def Fixjour(&block)
   return Fixjour unless block_given?
-  Fixjour.module_eval(&block)
+  Fixjour.evaluate(&block)
 end

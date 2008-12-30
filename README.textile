@@ -10,7 +10,7 @@ It uses the bits of object mother systems that worked well for
 me in the past, and actively discourages the bits that have caused
 me pain.
 
-h3. What it gets you:
+h2. What it gets you:
 
 With this setup:
 
@@ -49,15 +49,19 @@ attributes that are derived from the @new_person@ method, and
 ideal for things like testing controllers. It can also take
 attribute override options like so: @valid_person_attributes(:name => nil)@.
 
-h3. Usage:
+h2. Usage:
 
 You specify builder sets for your ActiveRecord models in a
-@Fixjour@ block using the @define_builder@ helper. Pass
-@define_builder@ a model class for which you want a new set
+@Fixjour@ block using the @define_builder@ helper, which can
+be used in one of two ways:
+
+h3. Using a builder block
+
+Pass @define_builder@ a model class for which you want a new set
 of creation methods, and a block which returns a new valid
 model object. Your block will be passed a hash of attribute
 overrides, *which you must merge yourself*. While this approach
-is much more manual than other fixture replacement tools, 
+is much more manual than other fixture replacement tools
 
 There are two reasons that you must merge the overrides yourself:
 
@@ -66,8 +70,33 @@ the attributes overrides a bit (though I'd strongly warn you against
 doing it too much, or else you might as well be using fixtures).
 # I think it's clearer to readers of the code.
 
-Despite these reasons, if you can think of a more elegant solution,
-I'm all ears.
+Example:
+
+<pre>
+define_builder(Person) do |overrides|
+  Person.new({ :name => "Pat", :age => 22 }.merge(overrides))
+end
+</pre>
+
+h3. Using a default attributes hash
+
+Again, pass @define_builder@ a model class, followed by a hash of
+valid attributes for that model. With this approach, the attribute
+overrides passed to the creation methods will be merged automatically.
+
+Example:
+
+<pre>
+define_builder(Person, :name => "Pat", :age => 22)
+</pre>
+
+This style is simpler, though you get less flexibility to work
+with the overrides hash. I'm not entirely convinced that's a bad
+thing either, since simplicity is key.
+
+*Note: Currently, builders defined using a hash cannot specify
+associated objects using Fixjour creation methods. Attempting to
+do so will raise a @NonBlockBuilderReference@ error.*
 
 h4. With Associations
 

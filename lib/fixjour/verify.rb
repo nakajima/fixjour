@@ -7,7 +7,7 @@ module Fixjour
     # * The creation methods return objects of the proper type
     def verify!
       builders.each do |klass|
-        result = validity_checker.send("new_#{name_for(klass)}")
+        result = evaluator.send("new_#{name_for(klass)}")
         
         unless result.valid?
           raise InvalidBuilder.new("The builder for #{klass} returns an invalid object")
@@ -20,16 +20,6 @@ module Fixjour
         unless result.is_a?(klass)
           raise WrongBuilderType.new("The builder for #{klass} must return instance of #{klass}")
         end
-      end
-    end
-
-    private
-
-    def validity_checker
-      @evaluator ||= begin
-        klass = Class.new
-        klass.send :include, self
-        klass.new
       end
     end
   end

@@ -1,18 +1,10 @@
 require 'spec/spec_helper'
 
-Fixjour do
-  define_builder(Foo) do |overrides|
-    Foo.new({ :name => 'Foo Namery', :bar => new_bar }.merge(overrides))
+describe Fixjour do
+  before(:each) do
+    define_all_builders
   end
   
-  define_builder(Bar) do |overrides|
-    Bar.new({ :name => "Bar Namery" }.merge(overrides))
-  end
-
-  define_builder(Bazz, :name => "Bazz Namery")
-end
-
-describe Fixjour do
   describe "when Fixjour is not included" do
     it "does not have access to creation methods" do
       self.should_not respond_to(:new_foo)
@@ -45,6 +37,12 @@ describe Fixjour do
         it "merges overrides" do
           new_foo(:name => nil).name.should be_nil
         end
+        
+        it "allows access to other builders" do
+          bar = new_bar
+          mock(self).new_bar { bar }
+          new_foo.bar.should == bar
+        end
       end
       
       context "passing a hash" do
@@ -63,21 +61,14 @@ describe Fixjour do
         it "merges overrides" do
           new_bazz(:name => nil).name.should be_nil
         end
-      end
-
-      describe "context binding" do
-        def some_helper
-          "Helped!"
-        end
         
-        it "allows access to other builders" do
-          bar = new_bar
-          mock(self).new_bar { bar }
-          new_foo.bar.should == bar
-        end
-
-        it "allows access to methods in surrounding context" do
-          new_foo(:name => some_helper).name.should == "Helped!"
+        it "does not allow access to other builders" do
+          Fixjour.builders.delete(Bazz)
+          proc {
+            Fixjour do
+              define_builder(Bazz, :bar => new_bar)
+            end
+          }.should raise_error(Fixjour::NonBlockBuilderReference)
         end
       end
     end

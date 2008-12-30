@@ -11,4 +11,6 @@ module Fixjour
   
   # Raised when a builder block saves the object.
   class BuilderSavedRecord < StandardError; end
+  
+  class NonBlockBuilderReference < StandardError; end
 end

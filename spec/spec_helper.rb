@@ -20,7 +20,7 @@ include ActsAsFu
 build_model(:foos) do
   string :name
   integer :age
-  integer :foo_id
+  integer :bar_id
 
   belongs_to :bar
 
@@ -33,4 +33,22 @@ end
 
 build_model(:bazzs) do
   string :name
+  integer :bar_id
+  
+  belongs_to :bar
+end
+
+def define_all_builders
+  Fixjour.builders.clear
+  Fixjour do
+    define_builder(Foo) do |overrides|
+      Foo.new({ :name => 'Foo Namery', :bar => new_bar }.merge(overrides))
+    end
+
+    define_builder(Bar) do |overrides|
+      Bar.new({ :name => "Bar Namery" }.merge(overrides))
+    end
+
+    define_builder(Bazz, :name => "Bazz Namery")
+  end
 end
