@@ -169,7 +169,7 @@ describe Fixjour do
       context "when the builder returns an invalid object" do
         before(:each) do
           Fixjour do
-            define_builder(Foo) { |overrides| Foo.new(:name => nil) }
+            define_builder(Foo) { |overrides| Foo.new(:bar => nil) }
           end
         end
       
@@ -183,7 +183,9 @@ describe Fixjour do
       context "when the builder saves the object" do
         before(:each) do
           Fixjour do
-            define_builder(Foo) { |overrides| Foo.create(:name => 'saved!') }
+            define_builder(Foo) do |overrides|
+              Foo.create(:name => 'saved!', :bar => new_bar)
+            end
           end
         end
       
