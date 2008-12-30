@@ -8,6 +8,10 @@ Fixjour do
   define_builder(Bar) do |overrides|
     Bar.new({ :name => "Bar Namery" }.merge(overrides))
   end
+
+  define_builder(Bazz) do |overrides|
+    { :name => "Bazz Namery" }.merge(overrides)
+  end
 end
 
 describe Fixjour do
@@ -43,6 +47,10 @@ describe Fixjour do
         new_foo(:name => nil).name.should be_nil
       end
       
+      it "works fine if we just return a hash" do
+        new_bazz.should be_kind_of(Bazz)
+      end
+
       describe "context binding" do
         def some_helper
           "Helped!"
@@ -112,8 +120,8 @@ describe Fixjour do
     
     describe "Fixjour.builders" do
       it "contains the classes for which there are builders" do
-        Fixjour.should have(2).builders
-        Fixjour.builders.should include(Foo, Bar)
+        Fixjour.should have(3).builders
+        Fixjour.builders.should include(Foo, Bar, Bazz)
       end
       
       it "blows up when you try to define multiple builders for a class" do

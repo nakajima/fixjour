@@ -30,3 +30,7 @@ end
 build_model(:bars) do
   string :name
 end
+
+build_model(:bazzs) do
+  string :name
+end

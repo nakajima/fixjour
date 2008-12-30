@@ -21,7 +21,7 @@ module Fixjour
 
       name = name_for(klass)
 
-      define_new(name, block)
+      define_new(klass, name, block)
       define_create(name)
       define_valid_attributes(name)
     end
@@ -33,10 +33,12 @@ module Fixjour
     end
     
     # Defines the new_* method
-    def define_new(name, block)
+    def define_new(klass, name, block)
       define_method("new_#{name}") do |*args|
         overrides = args.first || { }
-        block.bind(self).call(overrides)
+        result = block.bind(self).call(overrides)
+        result = klass.new(result) if result.is_a? Hash
+        result
       end
     end
     
