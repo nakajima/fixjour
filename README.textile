@@ -23,20 +23,20 @@ include Fixjour
 
 You get:
 
-h4. @new_person(overrides={})@
+h3. @new_person(overrides={})@
 
 The @new_person@ method basically just returns the result
 of your builder block, which should *always return an unsaved
 instance of the model class*. You can pass it overrides in a
 hash like so: @new_person(:name => nil)@.
 
-h4. @create_person(overrides={})@
+h3. @create_person(overrides={})@
 
 The @create_person@ method calls @new_person@, passing in any
 overrides you pass it, calls @save!@ on the result, and returns
 the saved object.
 
-h4. @valid_person_attributes(overrides={})@
+h3. @valid_person_attributes(overrides={})@
 
 The @valid_person_attributes@ returns a hash of valid person
 attributes that are derived from the @new_person@ method, and
