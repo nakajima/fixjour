@@ -80,6 +80,7 @@ module Fixjour
 
         overrides = args.extract_options!
         attrs = instance_variable_get("@__valid_#{name}_attrs").merge(overrides)
+        attrs.stringify_keys!
         attrs.make_indifferent!
         attrs
       end

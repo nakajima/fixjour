@@ -136,6 +136,11 @@ describe Fixjour do
         valid_foo_attributes[:name].should == valid_foo_attributes['name']
       end
       
+      it "overrides indifferently" do
+        valid_foo_attributes("name" => "as attr")[:name].should == "as attr"
+        valid_foo_attributes(:name => "as attr")["name"].should == "as attr"
+      end
+      
       it "memoizes valid model object" do
         mock.proxy(self).new_foo.once
         valid_foo_attributes
