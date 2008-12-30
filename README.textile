@@ -1,7 +1,87 @@
 h1. fixjour
 
-Another fixture replacement.
+Another fixture replacement. Gets you @new_*@, @create_*@ and
+@valid_*_attributes@ methods that you probably write yourself
+anyway.
 
-I'll let you know when it's ready.
+h3. What it gets you:
+
+With this setup:
+
+<pre>
+Fixjour do
+  define_builder(Person) do |overrides|
+    Person.new({
+      :name => 'Pat',
+      :age => 22
+    }.merge(overrides))
+  end
+end
+
+include Fixjour
+</pre>
+
+You get:
+
+h4. @new_person(overrides={})@
+
+The @new_person@ method basically just returns the result
+of your builder block, which should *always return an unsaved
+instance of the model class*. You can pass it overrides in a
+hash like so: @new_person(:name => nil)@.
+
+h4. @create_person(overrides={})@
+
+The @create_person@ method calls @new_person@, passing in any
+overrides you pass it, calls @save!@ on the result, and returns
+the saved object.
+
+h4. @valid_person_attributes(overrides={})@
+
+The @valid_person_attributes@ returns a hash of valid person
+attributes that are derived from the @new_person@ method, and
+ideal for things like testing controllers. It can also take
+attribute override options like so: @valid_person_attributes(:name => nil)@.
+
+h3. Usage:
+
+You specify builder sets for your ActiveRecord models in a
+@Fixjour@ block using the @define_builder@ helper. Pass
+@define_builder@ a model class for which you want a new set
+of creation methods, and a block which returns a new valid
+model object. Your block will be passed a hash of attribute
+overrides, *which you must merge yourself*. While this approach
+is much more manual than other fixture replacement tools, 
+
+There are two reasons that you must merge the overrides yourself:
+
+# You can delete options out of the hash, allowing you to process
+the attributes overrides a bit (though I'd strongly warn you against
+doing it too much, or else you might as well be using fixtures).
+# I think it's clearer to readers of the code.
+
+Despite these reasons, if you can think of a more elegant solution,
+I'm all ears.
+
+h4. With Associations
+
+To specify an associated object, you can call one of that object's
+creation methods:
+
+<pre>
+Fixjour do
+  define_builder(Post) do |overrides|
+    Post.new({ :name => 'a post', :body => 'texted' }.merge(overrides))
+  end
+  
+  define_builder(Comment) do |overrides|
+    Comment.new({ :body => 'Oh ok!', :post => new_post })
+  end
+end
+
+include Fixjour
+
+new_comment.post.name # => 'a post'
+</pre>
 
 (c) Copyright 2008 Pat Nakajima, released under MIT License.
