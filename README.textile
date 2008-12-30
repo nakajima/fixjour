@@ -108,4 +108,11 @@ again from within the builder block.
 
 h4. "View the CI build.":http://ci.patnakajima.com/fixjour
 
+h5. See Also
+
+I've talked to smart people who like these instead:
+
+* "fixturereplacement":http://github.com/smtlaissezfaire/fixturereplacement/tree/master
+* "factory girl":http://github.com/thoughtbot/factory_girl/tree
+
 (c) Copyright 2008 Pat Nakajima, released under MIT License.
