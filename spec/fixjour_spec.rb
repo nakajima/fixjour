@@ -11,19 +11,29 @@ Fixjour do
 end
 
 describe Fixjour do
-  describe "new_* methods" do
-    it "generates new_[model] method" do
-      proc {
-        new_foo
-      }.should_not raise_error
+  describe "when Fixjour is not included" do
+    it "does not have access to creation methods" do
+      self.should_not respond_to(:new_foo)
     end
+  end
+  
+  describe "when Fixjour is included" do
+    include Fixjour
     
-    it "returns result of block object" do
-      new_foo.should be_kind_of(Foo)
-    end
-    
-    it "merges overrides" do
-      new_foo(:name => nil).name.should be_nil
+    describe "new_* methods" do
+      it "generates new_[model] method" do
+        proc {
+          new_foo
+        }.should_not raise_error
+      end
+
+      it "returns result of block object" do
+        new_foo.should be_kind_of(Foo)
+      end
+
+      it "merges overrides" do
+        new_foo(:name => nil).name.should be_nil
+      end
     end
   end
 end
