@@ -7,7 +7,9 @@ require 'core_ext/hash'
 module Fixjour
   # This method should always return a valid instance of
   # a model object.
-  def self.define_builder(name, &block)
+  def self.define_builder(klass, &block)
+    name = klass.model_name.singular
+    
     define_method("new_#{name}") do |*args|
       overrides = args.first || { }
       block.bind(self).call(overrides)

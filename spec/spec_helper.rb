@@ -11,18 +11,16 @@ end
 
 include ActsAsFu
 
-def create_models
-  build_model(:foos) do
-    string :name
-    integer :age
-    integer :foo_id
-    
-    belongs_to :bar
+build_model(:foos) do
+  string :name
+  integer :age
+  integer :foo_id
 
-    validates_presence_of :name
-  end
-  
-  build_model(:bars) do
-    string :name
-  end
+  belongs_to :bar
+
+  validates_presence_of :name
+end
+
+build_model(:bars) do
+  string :name
 end

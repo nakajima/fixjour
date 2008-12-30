@@ -1,20 +1,16 @@
 require 'spec/spec_helper'
 
 Fixjour do
-  define_builder(:foo) do |overrides|
+  define_builder(Foo) do |overrides|
     Foo.new({ :name => 'Foo Namery', :bar => new_bar }.merge(overrides))
   end
   
-  define_builder(:bar) do |overrides|
+  define_builder(Bar) do |overrides|
     Bar.new({ :name => "Bar Namery" }.merge(overrides))
   end
 end
 
 describe Fixjour do
-  before(:each) do
-    create_models
-  end
-  
   describe "when Fixjour is not included" do
     it "does not have access to creation methods" do
       self.should_not respond_to(:new_foo)
