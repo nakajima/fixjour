@@ -9,9 +9,7 @@ Fixjour do
     Bar.new({ :name => "Bar Namery" }.merge(overrides))
   end
 
-  define_builder(Bazz) do |overrides|
-    { :name => "Bazz Namery" }.merge(overrides)
-  end
+  define_builder(Bazz, :name => "Bazz Namery")
 end
 
 describe Fixjour do
@@ -31,24 +29,40 @@ describe Fixjour do
         }.should_not raise_error
       end
 
-      it "returns a new model object" do
-        new_foo.should be_kind_of(Foo)
+      context "passing a builder block" do
+        it "returns a new model object" do
+          new_foo.should be_kind_of(Foo)
+        end
+
+        it "is a new record" do
+          new_foo.should be_new_record
+        end
+
+        it "returns defaults specified in block" do
+          new_foo.name.should == 'Foo Namery'
+        end
+
+        it "merges overrides" do
+          new_foo(:name => nil).name.should be_nil
+        end
       end
       
-      it "is a new record" do
-        new_foo.should be_new_record
-      end
-      
-      it "returns defaults specified in block" do
-        new_foo.name.should == 'Foo Namery'
-      end
-      
-      it "merges overrides" do
-        new_foo(:name => nil).name.should be_nil
-      end
-      
-      it "works fine if we just return a hash" do
-        new_bazz.should be_kind_of(Bazz)
+      context "passing a hash" do
+        it "returns a new model object" do
+          new_bazz.should be_kind_of(Bazz)
+        end
+
+        it "is a new record" do
+          new_bazz.should be_new_record
+        end
+
+        it "returns defaults specified in block" do
+          new_bazz.name.should == 'Bazz Namery'
+        end
+
+        it "merges overrides" do
+          new_bazz(:name => nil).name.should be_nil
+        end
       end
 
       describe "context binding" do
@@ -79,17 +93,34 @@ describe Fixjour do
         create_foo
       end
       
-      it "saves the record" do
-        foo = create_foo
-        foo.should_not be_new_record
+      context "declared with a block" do
+        it "saves the record" do
+          foo = create_foo
+          foo.should_not be_new_record
+        end
+
+        it "retains defaults" do
+          create_foo.name.should == 'Foo Namery'
+        end
+
+        it "still allows options override" do
+          create_foo(:name => "created").name.should == "created"
+        end
       end
       
-      it "retains defaults" do
-        create_foo.name.should == 'Foo Namery'
-      end
+      context "declated with a hash" do
+        it "saves the record" do
+          bazz = create_bazz
+          bazz.should_not be_new_record
+        end
 
-      it "still allows options override" do
-        create_foo(:name => "created").name.should == "created"
+        it "retains defaults" do
+          create_bazz.name.should == 'Bazz Namery'
+        end
+
+        it "still allows options override" do
+          create_bazz(:name => "created").name.should == "created"
+        end
       end
     end
     
@@ -115,6 +146,12 @@ describe Fixjour do
         valid_foo_attributes
         valid_foo_attributes
         valid_foo_attributes
+      end
+      
+      context "declared with a hash" do
+        it "works the same way as builder block style" do
+          valid_bazz_attributes[:name].should == new_bazz.name
+        end
       end
     end
     

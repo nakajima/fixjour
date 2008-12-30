@@ -16,12 +16,19 @@ module Fixjour
     
     # This method should always return a valid instance of
     # a model object.
-    def define_builder(klass, &block)
+    def define_builder(klass, options={}, &block)
       add_builder(klass)
 
       name = name_for(klass)
-
-      define_new(klass, name, block)
+      
+      if block_given?
+        define_new(name, &block)
+      else
+        define_new(name) do |overrides|
+          klass.new(options.merge(overrides))
+        end
+      end
+      
       define_create(name)
       define_valid_attributes(name)
     end
@@ -33,7 +40,7 @@ module Fixjour
     end
     
     # Defines the new_* method
-    def define_new(klass, name, block)
+    def define_new(name, &block)
       define_method("new_#{name}") do |*args|
         overrides = args.first || { }
         result = block.bind(self).call(overrides)
