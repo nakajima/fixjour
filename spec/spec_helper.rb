@@ -5,17 +5,24 @@ require 'rr'
 
 require File.dirname(__FILE__) + '/../lib/fixjour'
 
-include ActsAsFu
-
 Spec::Runner.configure do |c|
   c.mock_with(:rr)
 end
 
-Spec::Runner.configuration.before(:each) do
+include ActsAsFu
+
+def create_models
   build_model(:foos) do
     string :name
     integer :age
+    integer :foo_id
+    
+    belongs_to :bar
 
     validates_presence_of :name
+  end
+  
+  build_model(:bars) do
+    string :name
   end
 end
