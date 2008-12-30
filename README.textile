@@ -94,4 +94,12 @@ Call @Fixjour.verify!@ to ensure the following things:
 # @new_*@ methods are returning new records.
 # @new_*@ and @create_*@ methods return instances of the correct class.
 
+h4. TODO
+
+* There has to be a nicer way to merge attribute overrides
+* I don't like passing in a model class, then having to reference it
+again from within the builder block.
+
+h4. "View the CI build.":http://ci.patnakajima.com/fixjour
+
 (c) Copyright 2008 Pat Nakajima, released under MIT License.
