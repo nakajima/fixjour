@@ -109,5 +109,35 @@ describe Fixjour do
         valid_foo_attributes
       end
     end
+    
+    describe "Fixjour.builders" do
+      it "contains the classes for which there are builders" do
+        Fixjour.should have(2).builders
+        Fixjour.builders.should include(Foo, Bar)
+      end
+      
+      it "blows up when you try to define multiple builders for a class" do
+        proc {
+          Fixjour do
+            define_builder(Foo) { |overrides| Foo.new(:name => 'bad!') }
+          end
+        }.should raise_error(Fixjour::RedundantBuilder)
+      end
+    end
+    
+    describe "Fixjour.verify!" do
+      before(:each) do
+        Fixjour.builders.delete(Foo)
+        Fixjour do
+          define_builder(Foo) { |overrides| Foo.new(:name => nil) }
+        end
+      end
+      
+      it "ensures each builder returns valid objects by default" do
+        proc {
+          Fixjour.verify!
+        }.should raise_error(Fixjour::InvalidBuilder)
+      end
+    end
   end
 end
