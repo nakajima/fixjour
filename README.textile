@@ -4,6 +4,12 @@ Another fixture replacement. Gets you @new_*@, @create_*@ and
 @valid_*_attributes@ methods that you probably write yourself
 anyway.
 
+h4. The focus of this project is liberation through constraints.
+
+It uses the bits of object mother systems that worked well for
+me in the past, and actively discourages the bits that have caused
+me pain.
+
 h3. What it gets you:
 
 With this setup:

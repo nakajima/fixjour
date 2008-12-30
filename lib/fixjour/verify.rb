@@ -1,5 +1,10 @@
 module Fixjour
   class << self
+    # Checks each builder to ensure that they:
+    #
+    # * Return valid objects
+    # * The new_* methods return new records
+    # * The creation methods return objects of the proper type
     def verify!
       builders.each do |klass|
         result = validity_checker.send("new_#{name_for(klass)}")

@@ -4,14 +4,8 @@ require 'rubygems'
 require 'activerecord'
 require 'core_ext/hash'
 require 'fixjour/verify'
+require 'fixjour/errors'
 require 'fixjour/builders'
-
-module Fixjour
-  class InvalidBuilder < StandardError; end
-  class WrongBuilderType < StandardError; end
-  class RedundantBuilder < StandardError; end
-  class BuilderSavedRecord < StandardError; end
-end
 
 # This method is just for prettiness
 def Fixjour(&block)
