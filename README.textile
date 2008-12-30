@@ -100,8 +100,7 @@ do so will raise a @NonBlockBuilderReference@ error.*
 
 h4. With Associations
 
-To specify an associated object, you can call one of that object's
-creation methods:
+To specify an associated object, you can call that object's @new_*@ method:
 
 <pre>
 Fixjour do
@@ -118,6 +117,9 @@ include Fixjour
 
 new_comment.post.name # => 'a post'
 </pre>
+
+Note that it's never a good idea to use a @create_*@ method in a
+build block.
 
 h3. Verifying your setups
 
