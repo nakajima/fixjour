@@ -1,7 +1,13 @@
 require 'rubygems'
-require 'acts_as_fu'
 require 'spec'
 require 'rr'
+
+begin
+  require 'acts_as_fu'
+rescue LoadError
+  puts "You need the acts_as_fu gem to run the specs."
+  exit!
+end
 
 require File.dirname(__FILE__) + '/../lib/fixjour'
 
