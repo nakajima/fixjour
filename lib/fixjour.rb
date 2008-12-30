@@ -7,8 +7,10 @@ require 'fixjour/verify'
 require 'fixjour/builders'
 
 module Fixjour
-  class RedundantBuilder < StandardError; end
   class InvalidBuilder < StandardError; end
+  class WrongBuilderType < StandardError; end
+  class RedundantBuilder < StandardError; end
+  class BuilderSavedRecord < StandardError; end
 end
 
 # This method is just for prettiness

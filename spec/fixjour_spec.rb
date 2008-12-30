@@ -128,15 +128,48 @@ describe Fixjour do
     describe "Fixjour.verify!" do
       before(:each) do
         Fixjour.builders.delete(Foo)
-        Fixjour do
-          define_builder(Foo) { |overrides| Foo.new(:name => nil) }
+      end
+      
+      context "when the builder returns an invalid object" do
+        before(:each) do
+          Fixjour do
+            define_builder(Foo) { |overrides| Foo.new(:name => nil) }
+          end
+        end
+      
+        it "raises InvalidBuilder" do
+          proc {
+            Fixjour.verify!
+          }.should raise_error(Fixjour::InvalidBuilder)
         end
       end
       
-      it "ensures each builder returns valid objects by default" do
-        proc {
-          Fixjour.verify!
-        }.should raise_error(Fixjour::InvalidBuilder)
+      context "when the builder saves the object" do
+        before(:each) do
+          Fixjour do
+            define_builder(Foo) { |overrides| Foo.create(:name => 'saved!') }
+          end
+        end
+      
+        it "raises BuilderSavedRecord" do
+          proc {
+            Fixjour.verify!
+          }.should raise_error(Fixjour::BuilderSavedRecord)
+        end
+      end
+      
+      context "when the object is not the correct type" do
+        before(:each) do
+          Fixjour do
+            define_builder(Foo) { |overrides| Bar.new(:name => 'saved!') }
+          end
+        end
+      
+        it "raises WrongBuilderType" do
+          proc {
+            Fixjour.verify!
+          }.should raise_error(Fixjour::WrongBuilderType)
+        end
       end
     end
   end

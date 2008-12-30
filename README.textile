@@ -84,4 +84,14 @@ include Fixjour
 new_comment.post.name # => 'a post'
 </pre>
 
+h3. Verifying your setups
+
+Fixjour requires more work on your part, so it also includes a way
+to verify that your creation methods are behaving the way they should.
+Call @Fixjour.verify!@ to ensure the following things:
+
+# Creation methods are returning valid objects by default.
+# @new_*@ methods are returning new records.
+# @new_*@ and @create_*@ methods return instances of the correct class.
+
 (c) Copyright 2008 Pat Nakajima, released under MIT License.
