@@ -3,6 +3,7 @@ $LOAD_PATH << File.dirname(__FILE__)
 require 'rubygems'
 require 'activerecord'
 require 'core_ext/hash'
+require 'fixjour/redundant_check'
 require 'fixjour/verify'
 require 'fixjour/errors'
 require 'fixjour/builders'

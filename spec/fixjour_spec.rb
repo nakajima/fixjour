@@ -161,12 +161,80 @@ describe Fixjour do
         Fixjour.builders.should include(Foo, Bar, Bazz)
       end
       
-      it "blows up when you try to define multiple builders for a class" do
-        proc {
-          Fixjour do
-            define_builder(Foo) { |overrides| Foo.new(:name => 'bad!') }
+      context "when defining multiple builders for same class" do
+        it "raises RedundantBuilder error" do
+          proc {
+            Fixjour do
+              define_builder(Foo) { |overrides| Foo.new(:name => 'bad!') }
+            end
+          }.should raise_error(Fixjour::RedundantBuilder)
+        end
+      end
+      
+      describe "redundancy checker" do
+        describe "method_added hook" do
+          context "when it's already defined for the class" do
+            before(:each) do
+              @klass = Class.new do
+                def self.added_methods
+                  @added_methods ||= []
+                end
+                
+                def self.method_added(name)
+                  added_methods << name
+                end
+                
+                include Fixjour
+              end
+            end
+            
+            it "does not lose old behavior" do
+              @klass.class_eval { def foo; :foo end }
+              @klass.added_methods.should include(:foo)
+            end
+            
+            it "gets Fixjour behavior" do
+              foo = @klass.new.new_foo
+              foo.should be_kind_of(Foo)
+            end
           end
-        }.should raise_error(Fixjour::RedundantBuilder)
+        end
+        
+        context "when the method is redundant" do
+          it "raises RedundantBuilder for new_*" do
+            proc {
+              self.class.class_eval do
+                def new_foo(overrides={}); Foo.new end
+              end
+            }.should raise_error(Fixjour::RedundantBuilder)
+          end
+          
+          it "raises RedundantBuilder for create_*" do
+            proc {
+              self.class.class_eval do
+                def create_foo(overrides={}); Foo.new end
+              end
+            }.should raise_error(Fixjour::RedundantBuilder)
+          end
+          
+          it "raises RedundantBuilder for valid_*_attributes" do
+            proc {
+              self.class.class_eval do
+                def valid_foo_attributes(overrides={}); Foo.new end
+              end
+            }.should raise_error(Fixjour::RedundantBuilder)
+          end
+        end
+        
+        context "when the method is not redundant" do
+          it "does not raise error" do
+            proc {
+              self.class.class_eval do
+                def valid_nothing_attributes(overrides={}); Foo.new end
+              end
+            }.should_not raise_error
+          end
+        end
       end
     end
     
