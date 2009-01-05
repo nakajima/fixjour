@@ -78,6 +78,27 @@ define_builder(Person) do |overrides|
 end
 </pre>
 
+If you want to process an option in the overrides hash, you can use
+the @process@ method:
+
+<pre>
+define_builder(Person) do |overrides|
+  overrides.process(:child) do |is_child|
+    overrides[:age] = 14 if is_child
+  end
+  
+  Person.new({ :name => "Pat", :age => 22 }.merge(overrides))
+end
+
+person = new_person(:child => true)
+person.age  # => 14
+person.name # => "Pat"
+</pre>
+
+In the above example, the @:child@ key will be deleted from the @overrides@
+hash and made available as the @is_child@ block argument where you can handle
+things accordingly.
+
 h3. Using a default attributes hash
 
 Again, pass @define_builder@ a model class, followed by a hash of
