@@ -90,9 +90,13 @@ define_builder(Person) do |overrides|
   Person.new({ :name => "Pat", :age => 22 }.merge(overrides))
 end
 
+# the default
+person = new_person
+person.age # => 22
+
+# using the override
 person = new_person(:child => true)
 person.age  # => 14
-person.name # => "Pat"
 </pre>
 
 In the above example, the @:child@ key will be deleted from the @overrides@
