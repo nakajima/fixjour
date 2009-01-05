@@ -133,6 +133,7 @@ Call @Fixjour.verify!@ to ensure the following things:
 
 h4. TODO
 
+* Better error messages when @Fixjour.verify!@ fails
 * There has to be a nicer way to merge attribute overrides
 * I don't like passing in a model class, then having to reference it
 again from within the builder block.
