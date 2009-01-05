@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
     "lib/fixjour/builders.rb",
     "lib/fixjour/errors.rb",
     "lib/fixjour/verify.rb",
+    "lib/fixjour/redundant_check.rb",
     "lib/fixjour.rb"
   ]
   s.has_rdoc = true
