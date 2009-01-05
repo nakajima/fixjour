@@ -39,6 +39,11 @@ build_model(:bazzs) do
   belongs_to :bar
 end
 
+build_model(:people) do
+  string :first_name
+  string :last_name
+end
+
 def define_all_builders
   Fixjour.builders.clear
   Fixjour do

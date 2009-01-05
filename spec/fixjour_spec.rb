@@ -298,5 +298,27 @@ describe Fixjour do
         end
       end
     end
+    
+    describe "processing overrides" do
+      before(:each) do
+        Fixjour do
+          define_builder(Person) do |overrides|
+            overrides.process(:name) do |name|
+              split = name.split(' ')
+              overrides[:first_name]  = split[0]
+              overrides[:last_name]   = split[1]
+            end
+            
+            Person.new(overrides)
+          end
+        end
+      end
+
+      it "allows overrides hash to be processed" do
+        person = new_person(:name => "Bart Simpson")
+        person.first_name.should == "Bart"
+        person.last_name.should == "Simpson"
+      end
+    end
   end
 end
