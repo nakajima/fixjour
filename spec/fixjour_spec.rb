@@ -260,6 +260,12 @@ describe Fixjour do
             Fixjour.verify!
           }.should raise_error(Fixjour::InvalidBuilder)
         end
+        
+        it "includes information about the failure" do
+          proc {
+            Fixjour.verify!
+          }.should raise_error(/BAR AIN'T THURR/)
+        end
       end
       
       context "when the builder saves the object" do

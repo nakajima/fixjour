@@ -10,7 +10,7 @@ module Fixjour
         result = evaluator.send("new_#{name_for(klass)}")
         
         unless result.valid?
-          raise InvalidBuilder.new("The builder for #{klass} returns an invalid object")
+          raise InvalidBuilder.new("The builder for #{klass} returns an invalid object: #{result.errors.inspect}")
         end
         
         unless result.new_record?

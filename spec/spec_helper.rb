@@ -24,7 +24,7 @@ build_model(:foos) do
 
   belongs_to :bar
 
-  validates_presence_of :bar
+  validates_presence_of :bar, :message => "BAR AIN'T THURR"
   validates_presence_of :name
 end
 
