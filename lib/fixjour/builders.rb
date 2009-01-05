@@ -48,7 +48,7 @@ module Fixjour
     private
     
     def name_for(klass)
-      klass.model_name.singular
+      klass.name.underscore
     end
     
     # Defines the new_* method
