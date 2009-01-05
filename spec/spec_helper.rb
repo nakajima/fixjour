@@ -39,6 +39,10 @@ build_model(:bazzs) do
   belongs_to :bar
 end
 
+build_model(:foo_bars) do
+  string :name
+end
+
 build_model(:people) do
   string :first_name
   string :last_name
@@ -53,6 +57,10 @@ def define_all_builders
 
     define_builder(Bar) do |overrides|
       Bar.new({ :name => "Bar Namery" }.merge(overrides))
+    end
+
+    define_builder(FooBar) do |overrides|
+      FooBar.new
     end
 
     define_builder(Bazz, :name => "Bazz Namery")

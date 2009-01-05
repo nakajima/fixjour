@@ -157,7 +157,7 @@ describe Fixjour do
     
     describe "Fixjour.builders" do
       it "contains the classes for which there are builders" do
-        Fixjour.should have(3).builders
+        Fixjour.should have(4).builders
         Fixjour.builders.should include(Foo, Bar, Bazz)
       end
       
@@ -209,6 +209,14 @@ describe Fixjour do
             }.should raise_error(Fixjour::RedundantBuilder)
           end
           
+          it "raises RedundantBuilder for new_ when there's an underscore" do
+            proc {
+              self.class.class_eval do
+                def new_foo_bar(overrides={}); end
+              end
+            }.should raise_error(Fixjour::RedundantBuilder)
+          end
+          
           it "raises RedundantBuilder for create_*" do
             proc {
               self.class.class_eval do
@@ -220,13 +228,22 @@ describe Fixjour do
           it "raises RedundantBuilder for valid_*_attributes" do
             proc {
               self.class.class_eval do
-                def valid_foo_attributes(overrides={}); Foo.new end
+                def valid_foo_attributes(overrides={}); end
               end
             }.should raise_error(Fixjour::RedundantBuilder)
           end
         end
         
         context "when the method is not redundant" do
+          it "handles *similar* names" do
+            proc {
+              self.class.class_eval do
+                def new_foo_source(overrides={}); end
+                def choice_new_foo(overrides={}); end
+              end
+            }.should_not raise_error(Fixjour::RedundantBuilder)
+          end
+          
           it "does not raise error" do
             proc {
               self.class.class_eval do
