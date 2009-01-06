@@ -103,6 +103,12 @@ In the above example, the @:child@ key will be deleted from the @overrides@
 hash and made available as the @is_child@ block argument where you can handle
 things accordingly.
 
+*Note:* The @delete@ method is private on the overrides hash passed into the
+builder block. This is meant to encourage you to only use the @process@ method
+instead. Why? First, because processing the overrides hash is a smell. Deal
+with it. Second, using the @process@ method provides some indication to readers
+that you're screwing with the overrides hash, and that's a good thing.
+
 h3. Using a default attributes hash
 
 Again, pass @define_builder@ a model class, followed by a hash of
