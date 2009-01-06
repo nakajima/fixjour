@@ -10,7 +10,7 @@ It uses the bits of object mother systems that worked well for
 me in the past, and actively discourages the bits that have caused
 me pain.
 
-h3. Constraints
+The constraints:
 
 h4. One builder per model
 
