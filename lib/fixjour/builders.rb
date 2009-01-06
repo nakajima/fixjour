@@ -54,8 +54,7 @@ module Fixjour
     # Defines the new_* method
     def define_new(name, &block)
       define_method("new_#{name}") do |*args|
-        overrides = args.first || { }
-        overrides.extend(OverrideProcessing)
+        overrides = OverridesHash.new(args.first || { })
         result = block.bind(self).call(overrides)
         result
       end
@@ -92,14 +91,6 @@ module Fixjour
         klass = Class.new
         klass.send :include, self
         klass.new
-      end
-    end
-    
-    module OverrideProcessing
-      def process(key)
-        if value = delete(key)
-          yield value
-        end
       end
     end
   end
