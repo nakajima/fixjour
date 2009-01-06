@@ -1,5 +1,7 @@
 module Fixjour
   class << self
+    attr_accessor :allow_redundancy
+    
     def evaluate(&block)
       begin
         module_eval(&block)
@@ -21,7 +23,7 @@ module Fixjour
     # redundant builders aren't defined, which can lead to confusion
     # when trying to figure out where objects are being created.
     def add_builder(klass)
-      unless builders.add?(klass)
+      unless builders.add?(klass) or Fixjour.allow_redundancy
         raise RedundantBuilder.new("You already defined a builder for #{klass.inspect}")
       end
     end

@@ -172,6 +172,34 @@ describe Fixjour do
       end
       
       describe "redundancy checker" do
+        context "when :allow_redundancy is true" do
+          before(:each) do
+            Fixjour.builders.clear
+          end
+          
+          it "doesn't blow up" do
+            proc {
+              Fixjour :allow_redundancy => true do
+                define_builder(Bar) { Bar.new }
+                define_builder(Bar) { Bar.new }
+              end
+            }.should_not raise_error
+          end
+          
+          it "resets the settings when done" do
+            Fixjour :allow_redundancy => true do
+              define_builder(Bar) { Bar.new }
+              define_builder(Bar) { Bar.new }
+            end
+            
+            proc {
+              Fixjour do
+                define_builder(Bar) { Bar.new }
+              end
+            }.should raise_error(Fixjour::RedundantBuilder)
+          end
+        end
+        
         describe "method_added hook" do
           context "when it's already defined for the class" do
             before(:each) do
