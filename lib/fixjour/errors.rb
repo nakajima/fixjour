@@ -8,5 +8,7 @@ module Fixjour
   # Raised when a builder block saves the object.
   class BuilderSavedRecord < StandardError; end
   
+  # Raised when a Fixjour creation method is called in
+  # the wrong context.
   class NonBlockBuilderReference < StandardError; end
 end

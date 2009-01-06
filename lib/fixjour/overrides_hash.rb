@@ -1,4 +1,7 @@
 module Fixjour
+  # The overrides hash passed into each of the Fixjour
+  # methods is wrapped in this class to make the delete
+  # method private and add the ability to process.
   class OverridesHash < Hash
     private :delete
     
@@ -6,6 +9,8 @@ module Fixjour
       replace(hash)
     end
     
+    # Allows for processing of the overrides hash. Deletes
+    # the option when it's present, then yields the value.
     def process(option)
       if value = delete(option)
         yield value if block_given?
