@@ -2,32 +2,11 @@ module Fixjour
   class << self
     attr_accessor :allow_redundancy
     
-    def evaluate(&block)
-      begin
-        module_eval(&block)
-      rescue NameError => e
-        if evaluator.respond_to?(e.name)
-          raise NonBlockBuilderReference.new("You must use a builder block in order to reference other Fixjour creation methods.")
-        else
-          raise e
-        end
-      end
-    end
-    
     # The list of classes that have builders defined.
     def builders
       @builders ||= Set.new
     end
 
-    # Registers a class' builder. This allows us to make sure
-    # redundant builders aren't defined, which can lead to confusion
-    # when trying to figure out where objects are being created.
-    def add_builder(klass)
-      unless builders.add?(klass) or Fixjour.allow_redundancy
-        raise RedundantBuilder.new("You already defined a builder for #{klass.inspect}")
-      end
-    end
-    
     # This method should always return a valid instance of
     # a model object.
     def define_builder(klass, options={}, &block)
@@ -47,7 +26,28 @@ module Fixjour
       define_valid_attributes(name)
     end
     
+    def evaluate(&block)
+      begin
+        module_eval(&block)
+      rescue NameError => e
+        if evaluator.respond_to?(e.name)
+          raise NonBlockBuilderReference.new("You must use a builder block in order to reference other Fixjour creation methods.")
+        else
+          raise e
+        end
+      end
+    end
+    
     private
+    
+    # Registers a class' builder. This allows us to make sure
+    # redundant builders aren't defined, which can lead to confusion
+    # when trying to figure out where objects are being created.
+    def add_builder(klass)
+      unless builders.add?(klass) or Fixjour.allow_redundancy
+        raise RedundantBuilder.new("You already defined a builder for #{klass.inspect}")
+      end
+    end
     
     def name_for(klass)
       klass.name.underscore
