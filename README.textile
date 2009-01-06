@@ -4,11 +4,35 @@ Another fixture replacement. Gets you @new_*@, @create_*@ and
 @valid_*_attributes@ methods that you probably write yourself
 anyway.
 
-h4. The focus of this project is liberation through constraints.
+h2. The focus of this project is liberation through constraints.
 
 It uses the bits of object mother systems that worked well for
 me in the past, and actively discourages the bits that have caused
 me pain.
+
+h3. Constraints
+
+h4. One builder per model
+
+If you try to define a builder more than once per model, you'll
+run into a @Fixjour::RedundantBuilder@ error. One builder per
+model decreases confusion.
+
+h4. No redundant object creation methods
+
+If you try to define a method that's already been defined by
+a Fixjour builder, you'll run into a @Fixjour::RedundantBuilder@
+error. If you find the need to alter the behavior of a builder
+for a particular set of tests, you should just wrap the creation
+methods defined by Fixjour, preferably with a name that describes
+how the new method is different from the Fixjour method.
+
+h4. Processing the overrides hash is bad
+
+If you want to mess with the overrides hash that can be passed
+into any of the creation methods, you must use the @process@
+method (see below). To enforce this, the @delete@ method is actually
+private for the overrides hash.
 
 h2. What it gets you:
 
