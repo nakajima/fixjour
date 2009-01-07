@@ -399,19 +399,23 @@ describe Fixjour do
         before(:each) do
           Fixjour do
             define_builder(Foo) do |overrides|
+              overrides.process(:alias) do |value|
+                overrides[:name] = value
+              end
+              
               Foo.new({ :name => "El Nameo!" }.merge(overrides))
             end
           end
         end
         
         it "returns a new Fixjour::OverridesHash" do
-          mock.proxy(Fixjour::OverridesHash).new(:name => "Bart Simpson")
-          new_foo(:name => "Bart Simpson")
+          mock.proxy(Fixjour::OverridesHash).new(:alias => "Bart Simpson")
+          new_foo(:alias => "Bart Simpson")
         end
         
         it "merges overrides" do
-          mock.proxy.instance_of(Hash).merge(Fixjour::OverridesHash.new(:name => "Bart Simpson"))
-          new_foo(:name => "Bart Simpson")
+          mock.proxy.instance_of(Hash).merge(Fixjour::OverridesHash.new(:alias => "Bart Simpson"))
+          new_foo(:alias => "Bart Simpson").name.should == "Bart Simpson"
         end
       end
       
@@ -419,19 +423,23 @@ describe Fixjour do
         before(:each) do
           Fixjour do
             define_builder(Foo) do |klass, overrides|
+              overrides.process(:alias) do |value|
+                overrides[:name] = value
+              end
+              
               klass.new(:name => "El Nameo!")
             end
           end
         end
         
         it "returns a new Fixjour::OverridesHash" do
-          mock.proxy(Fixjour::OverridesHash).new(:name => "Bart Simpson")
-          new_foo(:name => "Bart Simpson")
+          mock.proxy(Fixjour::OverridesHash).new(:alias => "Bart Simpson")
+          new_foo(:alias => "Bart Simpson")
         end
         
         it "merges overrides" do
-          mock.proxy.instance_of(Hash).merge(Fixjour::OverridesHash.new(:name => "Bart Simpson"))
-          new_foo(:name => "Bart Simpson")
+          mock.proxy.instance_of(Hash).merge(Fixjour::OverridesHash.new(:alias => "Bart Simpson"))
+          new_foo(:alias => "Bart Simpson").name.should == "Bart Simpson"
         end
       end
     end
