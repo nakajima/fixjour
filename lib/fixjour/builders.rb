@@ -26,6 +26,7 @@ module Fixjour
       define_valid_attributes(name)
     end
     
+    # Adds builders to Fixjour.
     def evaluate(&block)
       begin
         module_eval(&block)
@@ -37,15 +38,16 @@ module Fixjour
         end
       end
     end
+
+    private
     
+    # Checks to see whether or not a builder is defined. Duh.
     def builder_defined?(builder)
       case builder
       when Class          then builders.include?(builders)
       when String, Symbol then builders.map(&:name).include?(builder)
       end
     end
-    
-    private
     
     # Registers a class' builder. This allows us to make sure
     # redundant builders aren't defined, which can lead to confusion
@@ -102,6 +104,7 @@ module Fixjour
       end
     end
     
+    # Anonymous class used for reflecting on current Fixjour state.
     def evaluator
       @evaluator ||= begin
         klass = Class.new
