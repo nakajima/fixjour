@@ -1,10 +1,10 @@
 require 'spec/spec_helper'
 
-describe Fixjour::Merger do
+describe Fixjour::MergingProxy do
   attr_reader :merger
   
   before(:each) do
-    @merger = Fixjour::Merger.new(Foo, :name => "MERGED!")
+    @merger = Fixjour::MergingProxy.new(Foo, :name => "MERGED!")
   end
   
   describe "#new" do
