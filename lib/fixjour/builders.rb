@@ -61,7 +61,7 @@ module Fixjour
         
         args = case block.arity
         when 1 then [overrides]
-        when 2 then [Merger.new(klass, overrides), overrides]
+        when 2 then [MergingProxy.new(klass, overrides), overrides]
         end
         
         result = block.bind(self).call(*args)
