@@ -39,8 +39,6 @@ module Fixjour
       end
     end
 
-    private
-    
     # Checks to see whether or not a builder is defined. Duh.
     def builder_defined?(builder)
       case builder
@@ -48,6 +46,8 @@ module Fixjour
       when String, Symbol then builders.map(&:name).include?(builder)
       end
     end
+    
+    private
     
     # Registers a class' builder. This allows us to make sure
     # redundant builders aren't defined, which can lead to confusion
