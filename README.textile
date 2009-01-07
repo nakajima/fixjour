@@ -188,10 +188,8 @@ Call @Fixjour.verify!@ to ensure the following things:
 
 h4. TODO
 
-* Better error messages when @Fixjour.verify!@ fails
-* There has to be a nicer way to merge attribute overrides
-* I don't like passing in a model class, then having to reference it
-again from within the builder block.
+* Explain new builder block syntax where @klass@ gets passed as a block
+  argument and @overrides@ are automatically merged
 
 h4. "View the CI build.":http://ci.patnakajima.com/fixjour
 
