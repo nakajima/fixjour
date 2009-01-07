@@ -38,6 +38,13 @@ module Fixjour
       end
     end
     
+    def builder_defined?(builder)
+      case builder
+      when Class          then builders.include?(builders)
+      when String, Symbol then builders.map(&:name).include?(builder)
+      end
+    end
+    
     private
     
     # Registers a class' builder. This allows us to make sure

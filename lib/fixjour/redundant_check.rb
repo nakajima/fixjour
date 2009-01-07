@@ -1,17 +1,6 @@
 module Fixjour
-  # Raised when a builder is defined for a class that already
-  # has one.
-  class RedundantBuilder < StandardError; end
-  
   def self.included(klass)
     klass.extend(RedundancyChecker)
-  end
-  
-  def self.builder_defined?(builder)
-    case builder
-    when Class          then builders.include?(builders)
-    when String, Symbol then builders.map(&:name).include?(builder)
-    end
   end
   
   module RedundancyChecker

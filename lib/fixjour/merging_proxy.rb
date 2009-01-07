@@ -3,7 +3,7 @@ module Fixjour
   # block takes two arguments. Automatically merges overrides when
   # the #new method is called.
   class MergingProxy
-    instance_methods.each { |m| undef_method(m) unless m =~ /__/ }
+    instance_methods.each { |m| undef_method(m) unless m =~ /__|inspect/ }
     
     def initialize(klass, overrides)
       @klass = klass

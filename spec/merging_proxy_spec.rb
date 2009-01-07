@@ -26,5 +26,9 @@ describe Fixjour::MergingProxy do
     it "proxies respond_to? to klass" do
       merger.should respond_to(:superclass)
     end
+    
+    it "should keep its own inspect method" do
+      merger.inspect.should_not == Foo.inspect
+    end
   end
 end

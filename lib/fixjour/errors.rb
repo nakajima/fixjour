@@ -11,4 +11,8 @@ module Fixjour
   # Raised when a Fixjour creation method is called in
   # the wrong context.
   class NonBlockBuilderReference < StandardError; end
+  
+  # Raised when a builder is defined for a class that already
+  # has one.
+  class RedundantBuilder < StandardError; end
 end
