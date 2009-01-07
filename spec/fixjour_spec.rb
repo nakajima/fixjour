@@ -21,7 +21,53 @@ describe Fixjour do
         }.should_not raise_error
       end
 
-      context "passing a builder block" do
+      context "passing a builder block with one arg" do
+        before(:each) do
+          Fixjour.builders.delete(Foo)
+          Fixjour do
+            define_builder(Foo) do |overrides|
+              Foo.new({ :name => 'Foo Namery', :bar => new_bar }.merge(overrides))
+            end
+          end
+        end
+        
+        it "returns a new model object" do
+          new_foo.should be_kind_of(Foo)
+        end
+
+        it "is a new record" do
+          new_foo.should be_new_record
+        end
+
+        it "returns defaults specified in block" do
+          new_foo.name.should == 'Foo Namery'
+        end
+
+        it "merges overrides" do
+          new_foo(:name => nil).name.should be_nil
+        end
+        
+        it "can be made invalid associated objects" do
+          new_foo(:bar => nil).should_not be_valid
+        end
+        
+        it "allows access to other builders" do
+          bar = new_bar
+          mock(self).new_bar { bar }
+          new_foo.bar.should == bar
+        end
+      end
+      
+      context "passing a builder block with two args" do
+        before(:each) do
+          Fixjour.builders.delete(Foo)
+          Fixjour do
+            define_builder(Foo) do |klass, overrides|
+              klass.new({ :name => 'Foo Namery', :bar => new_bar })
+            end
+          end
+        end
+        
         it "returns a new model object" do
           new_foo.should be_kind_of(Foo)
         end
@@ -345,9 +391,48 @@ describe Fixjour do
     end
     
     describe "processing overrides" do
-      it "returns a new Fixjour::OverridesHash" do
-        mock.proxy(Fixjour::OverridesHash).new(:name => "Bart Simpson")
-        new_bazz(:name => "Bart Simpson")
+      before(:each) do
+        Fixjour.builders.delete(Foo)
+      end
+      
+      context "when the builder block has one arg" do
+        before(:each) do
+          Fixjour do
+            define_builder(Foo) do |overrides|
+              Foo.new({ :name => "El Nameo!" }.merge(overrides))
+            end
+          end
+        end
+        
+        it "returns a new Fixjour::OverridesHash" do
+          mock.proxy(Fixjour::OverridesHash).new(:name => "Bart Simpson")
+          new_foo(:name => "Bart Simpson")
+        end
+        
+        it "merges overrides" do
+          mock.proxy.instance_of(Hash).merge(Fixjour::OverridesHash.new(:name => "Bart Simpson"))
+          new_foo(:name => "Bart Simpson")
+        end
+      end
+      
+      context "when the builder block has one arg" do
+        before(:each) do
+          Fixjour do
+            define_builder(Foo) do |klass, overrides|
+              klass.new(:name => "El Nameo!")
+            end
+          end
+        end
+        
+        it "returns a new Fixjour::OverridesHash" do
+          mock.proxy(Fixjour::OverridesHash).new(:name => "Bart Simpson")
+          new_foo(:name => "Bart Simpson")
+        end
+        
+        it "merges overrides" do
+          mock.proxy.instance_of(Hash).merge(Fixjour::OverridesHash.new(:name => "Bart Simpson"))
+          new_foo(:name => "Bart Simpson")
+        end
       end
     end
   end

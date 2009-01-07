@@ -12,15 +12,15 @@ module Fixjour
     def define_builder(klass, options={}, &block)
       add_builder(klass)
 
-      name = name_for(klass)
-      
       if block_given?
-        define_new(name, &block)
+        define_new(klass, &block)
       else
-        define_new(name) do |overrides|
+        define_new(klass) do |overrides|
           klass.new(options.merge(overrides))
         end
       end
+      
+      name = name_for(klass)
       
       define_create(name)
       define_valid_attributes(name)
@@ -54,10 +54,17 @@ module Fixjour
     end
     
     # Defines the new_* method
-    def define_new(name, &block)
+    def define_new(klass, &block)
+      name = name_for(klass)
       define_method("new_#{name}") do |*args|
         overrides = OverridesHash.new(args.first || { })
-        result = block.bind(self).call(overrides)
+        
+        args = case block.arity
+        when 1 then [overrides]
+        when 2 then [Merger.new(klass, overrides), overrides]
+        end
+        
+        result = block.bind(self).call(*args)
         result
       end
     end
