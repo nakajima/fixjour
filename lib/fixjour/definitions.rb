@@ -3,19 +3,7 @@ module Fixjour
     # Defines the new_* method
     def define_new(klass, &block)
       define_method("new_#{name_for(klass)}") do |*args|
-        overrides = OverridesHash.new(args.first || { })
-      
-        args = case block.arity
-        when 1 then [overrides]
-        when 2 then [MergingProxy.new(klass, overrides), overrides]
-        end
-      
-        result = block.bind(self).call(*args)
-        
-        case result
-        when Hash then klass.new(result.merge(overrides))
-        else result
-        end
+        Generator.new(klass, block).call(self, args.extract_options!)
       end
     end
   

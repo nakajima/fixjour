@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
     "lib/fixjour/definitions.rb",
     "lib/fixjour/merging_proxy.rb",
     "lib/fixjour/errors.rb",
+    "lib/fixjour/generator.rb",
     "lib/fixjour/verify.rb",
     "lib/fixjour/redundant_check.rb",
     "lib/fixjour/overrides_hash.rb",

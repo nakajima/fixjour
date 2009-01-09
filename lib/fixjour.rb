@@ -8,6 +8,7 @@ require 'fixjour/redundant_check'
 require 'fixjour/overrides_hash'
 require 'fixjour/verify'
 require 'fixjour/errors'
+require 'fixjour/generator'
 require 'fixjour/definitions'
 require 'fixjour/builders'
 
