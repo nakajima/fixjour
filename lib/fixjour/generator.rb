@@ -1,4 +1,6 @@
 module Fixjour
+  # This generates a new instance of a model object for 
+  # the new_[model] method.
   class Generator
     attr_reader :klass, :block
   
