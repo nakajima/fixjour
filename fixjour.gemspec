@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
     "lib/core_ext/hash.rb",
     "lib/fixjour",
     "lib/fixjour/builders.rb",
+    "lib/fixjour/definitions.rb",
     "lib/fixjour/merging_proxy.rb",
     "lib/fixjour/errors.rb",
     "lib/fixjour/verify.rb",

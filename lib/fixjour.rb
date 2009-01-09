@@ -8,6 +8,7 @@ require 'fixjour/redundant_check'
 require 'fixjour/overrides_hash'
 require 'fixjour/verify'
 require 'fixjour/errors'
+require 'fixjour/definitions'
 require 'fixjour/builders'
 
 # This method is just for prettiness
