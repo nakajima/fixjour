@@ -1,7 +1,7 @@
 module Fixjour
-  extend Definitions
-  
   class << self
+    include Definitions
+    
     attr_accessor :allow_redundancy
     
     # The list of classes that have builders defined.

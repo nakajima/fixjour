@@ -1,28 +1,7 @@
 module Fixjour
   module Definitions
-    def self.cache
-      @cache ||= { }
-    end
-    
     # Defines the new_* method
     def define_new(klass, &block)
-      # Fixjour::Definitions.cache[klass] = block
-      
-      # module_eval(<<-END, __FILE__, __LINE__)
-      #   def new_#{name_for(klass)}(overrides={})
-      #     block = Fixjour::Definitions.cache[#{klass.name}]
-      #     overrides = OverridesHash.new(overrides)
-      #     
-      #     args = case block.arity
-      #     when 1 then [overrides]
-      #     when 2 then [MergingProxy.new(#{klass.name}, overrides), overrides]
-      #     end
-      #     
-      #     result = block.bind(self).call(*args)
-      #     result
-      #   end
-      # END
-      
       define_method("new_#{name_for(klass)}") do |*args|
         overrides = OverridesHash.new(args.first || { })
       
