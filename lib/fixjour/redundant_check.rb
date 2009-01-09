@@ -3,6 +3,10 @@ module Fixjour
     klass.extend(RedundancyChecker)
   end
   
+  # Uses method_added hook to make sure no redundant builder methods
+  # get defined after a builder has already created them. For example,
+  # if you have a Comment builder, this hook will ensure that any attempt
+  # to define a #new_comment method will raise an exception.
   module RedundancyChecker
     BUILDER_METHOD_PATTERN = /^(new|create|valid)_(\w+)(_attributes)?$/
     
