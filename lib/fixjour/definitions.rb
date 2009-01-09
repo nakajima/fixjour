@@ -11,7 +11,11 @@ module Fixjour
         end
       
         result = block.bind(self).call(*args)
-        result
+        
+        case result
+        when Hash then klass.new(result.merge(overrides))
+        else result
+        end
       end
     end
   

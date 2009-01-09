@@ -22,39 +22,78 @@ describe Fixjour do
       end
 
       context "passing a builder block with one arg" do
-        before(:each) do
-          Fixjour.builders.delete(Foo)
-          Fixjour do
-            define_builder(Foo) do |overrides|
-              Foo.new({ :name => 'Foo Namery', :bar => new_bar }.merge(overrides))
+        context "when it returns a model object" do
+          before(:each) do
+            Fixjour.builders.delete(Foo)
+            Fixjour do
+              define_builder(Foo) do |overrides|
+                Foo.new({ :name => 'Foo Namery', :bar => new_bar }.merge(overrides))
+              end
             end
           end
+
+          it "returns a new model object" do
+            new_foo.should be_kind_of(Foo)
+          end
+
+          it "is a new record" do
+            new_foo.should be_new_record
+          end
+
+          it "returns defaults specified in block" do
+            new_foo.name.should == 'Foo Namery'
+          end
+
+          it "merges overrides" do
+            new_foo(:name => nil).name.should be_nil
+          end
+
+          it "can be made invalid associated objects" do
+            new_foo(:bar => nil).should_not be_valid
+          end
+
+          it "allows access to other builders" do
+            bar = new_bar
+            mock(self).new_bar { bar }
+            new_foo.bar.should == bar
+          end          
         end
         
-        it "returns a new model object" do
-          new_foo.should be_kind_of(Foo)
-        end
+        context "when it returns a hash" do
+          before(:each) do
+            Fixjour.builders.delete(Foo)
+            Fixjour do
+              define_builder(Foo) do |overrides|
+                { :name => 'Foo Namery', :bar => new_bar }
+              end
+            end
+          end
 
-        it "is a new record" do
-          new_foo.should be_new_record
-        end
+          it "returns a new model object" do
+            new_foo.should be_kind_of(Foo)
+          end
 
-        it "returns defaults specified in block" do
-          new_foo.name.should == 'Foo Namery'
-        end
+          it "is a new record" do
+            new_foo.should be_new_record
+          end
 
-        it "merges overrides" do
-          new_foo(:name => nil).name.should be_nil
-        end
-        
-        it "can be made invalid associated objects" do
-          new_foo(:bar => nil).should_not be_valid
-        end
-        
-        it "allows access to other builders" do
-          bar = new_bar
-          mock(self).new_bar { bar }
-          new_foo.bar.should == bar
+          it "returns defaults specified in block" do
+            new_foo.name.should == 'Foo Namery'
+          end
+
+          it "merges overrides" do
+            new_foo(:name => nil).name.should be_nil
+          end
+
+          it "can be made invalid associated objects" do
+            new_foo(:bar => nil).should_not be_valid
+          end
+
+          it "allows access to other builders" do
+            bar = new_bar
+            mock(self).new_bar { bar }
+            new_foo.bar.should == bar
+          end
         end
       end
       
