@@ -1,9 +1,9 @@
 module Fixjour
   class << self
     include Definitions
-    
+
     attr_accessor :allow_redundancy
-    
+
     # The list of classes that have builders defined.
     def builders
       @builders ||= Set.new
@@ -21,19 +21,19 @@ module Fixjour
           klass.new(options.merge(overrides))
         end
       end
-      
+
       name = name_for(klass)
-      
+
       define_create(name)
       define_valid_attributes(name)
     end
-    
+
     # Adds builders to Fixjour.
     def evaluate(&block)
       begin
         module_eval(&block)
       rescue NameError => e
-        if evaluator.respond_to?(e.name)
+        if e.name && evaluator.respond_to?(e.name)
           raise NonBlockBuilderReference.new("You must use a builder block in order to reference other Fixjour creation methods.")
         else
           raise e
@@ -48,9 +48,9 @@ module Fixjour
       when String, Symbol then builders.map(&:name).include?(builder)
       end
     end
-    
+
     private
-    
+
     # Registers a class' builder. This allows us to make sure
     # redundant builders aren't defined, which can lead to confusion
     # when trying to figure out where objects are being created.
@@ -59,11 +59,11 @@ module Fixjour
         raise RedundantBuilder.new("You already defined a builder for #{klass.inspect}")
       end
     end
-    
+
     def name_for(klass)
       klass.name.underscore
     end
-    
+
     # Anonymous class used for reflecting on current Fixjour state.
     def evaluator
       @evaluator ||= begin
