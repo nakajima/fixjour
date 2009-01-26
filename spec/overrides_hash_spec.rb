@@ -20,6 +20,10 @@ describe Fixjour::OverridesHash do
         end
         called.should_not be
       end
+      
+      it "returns nil" do
+        overrides.process(:not_there).should be_nil
+      end
     end
     
     context "when the option is present" do
@@ -39,6 +43,10 @@ describe Fixjour::OverridesHash do
           overrides[:result] = value
         end
         overrides[:result].should == "Pat"
+      end
+      
+      it "returns the value" do
+        overrides.process(:name).should == "Pat"
       end
     end
   end

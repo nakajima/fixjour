@@ -12,8 +12,8 @@ module Fixjour
     # Allows for processing of the overrides hash. Deletes
     # the option when it's present, then yields the value.
     def process(option)
-      if value = delete(option)
-        yield value if block_given?
+      delete(option).tap do |value|
+        yield value if value and block_given?
       end
     end
   end
