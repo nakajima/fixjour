@@ -181,8 +181,7 @@ Call @Fixjour.verify!@ to ensure the following things:
 
 h4. TODO
 
-* Explain new builder block syntax where @klass@ gets passed as a block
-  argument and @overrides@ are automatically merged
+* There should be a @Builder@ class.
 
 h4. "View the CI build.":http://ci.patnakajima.com/fixjour
 

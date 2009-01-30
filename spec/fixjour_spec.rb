@@ -374,67 +374,6 @@ describe Fixjour do
       end
     end
 
-    describe "Fixjour.verify!" do
-      before(:each) do
-        Fixjour.builders.delete(Foo)
-      end
-
-      it "can take verify as an option" do
-        mock(Fixjour).verify!.once
-        Fixjour(:verify => true) { }
-      end
-
-      context "when the builder returns an invalid object" do
-        before(:each) do
-          Fixjour do
-            define_builder(Foo) { |overrides| Foo.new(:bar => nil) }
-          end
-        end
-
-        it "raises InvalidBuilder" do
-          proc {
-            Fixjour.verify!
-          }.should raise_error(Fixjour::InvalidBuilder)
-        end
-
-        it "includes information about the failure" do
-          proc {
-            Fixjour.verify!
-          }.should raise_error(/BAR AIN'T THURR/)
-        end
-      end
-
-      context "when the builder saves the object" do
-        before(:each) do
-          Fixjour do
-            define_builder(Foo) do |overrides|
-              Foo.create(:name => 'saved!', :bar => new_bar)
-            end
-          end
-        end
-
-        it "raises BuilderSavedRecord" do
-          proc {
-            Fixjour.verify!
-          }.should raise_error(Fixjour::BuilderSavedRecord)
-        end
-      end
-
-      context "when the object is not the correct type" do
-        before(:each) do
-          Fixjour do
-            define_builder(Foo) { |overrides| Bar.new(:name => 'saved!') }
-          end
-        end
-
-        it "raises WrongBuilderType" do
-          proc {
-            Fixjour.verify!
-          }.should raise_error(Fixjour::WrongBuilderType)
-        end
-      end
-    end
-
     describe "processing overrides" do
       before(:each) do
         Fixjour.builders.delete(Foo)

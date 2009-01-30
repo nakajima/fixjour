@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fixjour}
-  s.version = "0.0.6"
+  s.version = "0.0.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Nakajima"]
@@ -14,12 +14,12 @@ Gem::Specification.new do |s|
     "lib/fixjour",
     "lib/fixjour/builders.rb",
     "lib/fixjour/definitions.rb",
-    "lib/fixjour/merging_proxy.rb",
     "lib/fixjour/errors.rb",
     "lib/fixjour/generator.rb",
-    "lib/fixjour/verify.rb",
-    "lib/fixjour/redundant_check.rb",
+    "lib/fixjour/merging_proxy.rb",
     "lib/fixjour/overrides_hash.rb",
+    "lib/fixjour/redundant_check.rb",
+    "lib/fixjour/verify.rb",
     "lib/fixjour.rb"
   ]
   s.has_rdoc = true

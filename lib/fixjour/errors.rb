@@ -1,6 +1,10 @@
 module Fixjour
-  # Raised when a builder returns an invalid object
+  # Raised when a builder returns an invalid object.
   class InvalidBuilder < StandardError; end
+  
+  # Raised when a builder will return an invalid object
+  # due to a validates_uniqueness_of validation.
+  class DangerousBuilder < StandardError; end
   
   # Raised when a builder returns an object of the wrong type
   class WrongBuilderType < StandardError; end
