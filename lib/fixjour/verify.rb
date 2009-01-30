@@ -21,7 +21,11 @@ module Fixjour
           error(klass, WrongBuilderType, "must return an instance of #{klass}")
         end
         
-        result.save!
+        begin
+          result.save!
+        rescue => e
+          error(klass, UnsavableBuilder, "raises #{e.inspect} when saved to the database")
+        end
         
         unless new_record(klass).valid?
           msg = ""
@@ -33,14 +37,14 @@ module Fixjour
       end
     end
     
+    def new_record(klass)
+      evaluator.send("new_#{name_for(klass)}")
+    end
+    
     private
     
     def error(klass, exception, msg)
       raise exception.new("The builder for #{klass} #{msg} ")
-    end
-    
-    def new_record(klass)
-      evaluator.send("new_#{name_for(klass)}")
     end
   end
 end

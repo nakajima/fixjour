@@ -6,6 +6,10 @@ module Fixjour
   # due to a validates_uniqueness_of validation.
   class DangerousBuilder < StandardError; end
   
+  # Raised when a builder returns an object that cannot
+  # be saved the database.
+  class UnsavableBuilder < StandardError; end
+  
   # Raised when a builder returns an object of the wrong type
   class WrongBuilderType < StandardError; end
   

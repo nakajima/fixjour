@@ -54,6 +54,38 @@ describe Fixjour, ".verify!" do
       end
     end
   end
+  
+  context "when the builder returns an object that cannot be saved" do
+    before(:each) do
+      Fixjour.builders.clear
+
+      klass = build_model(:bars) { string :name }
+      
+      bar_bomb = Object.new
+      stub(bar_bomb).save! { raise ActiveRecord::StatementInvalid.new("oops!") }
+      stub(bar_bomb).valid? { true }
+      stub(bar_bomb).new_record? { true }
+      stub(bar_bomb).is_a?(Bar) { true }
+      
+      stub(Fixjour).new_record(Bar) { bar_bomb }
+      
+      Fixjour do
+        define_builder(klass) { |overrides| klass.new }
+      end
+    end
+    
+    it "raises UnsavableBuilder" do
+      proc {
+        Fixjour.verify!
+      }.should raise_error(Fixjour::UnsavableBuilder)
+    end
+    
+    it "includes information about the failure" do
+      proc {
+        Fixjour.verify!
+      }.should raise_error(/ActiveRecord::StatementInvalid/)
+    end
+  end
 
   context "when the builder saves the object" do
     before(:each) do
