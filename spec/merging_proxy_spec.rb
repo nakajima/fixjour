@@ -17,6 +17,20 @@ describe Fixjour::MergingProxy do
       merger.new(:name => "Pat").should be_kind_of(Foo)
     end
   end
+  
+  describe "protected" do
+    it "stores the protected attributes" do
+      @merger.protected :name
+      @merger.protected.should == Set.new([:name])
+    end
+    
+    it "sends values to instance" do
+      mock.proxy(Foo).new(:name => "MERGED!").never
+      mock.proxy(Foo).new({ }).once
+      @merger.protected :name
+      @merger.new(:name => "MERGED!").name.should == "MERGED!"
+    end
+  end
 
   describe "proxying to klass" do
     it "proxies other methods to klass" do

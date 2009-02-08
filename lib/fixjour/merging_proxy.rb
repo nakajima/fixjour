@@ -9,9 +9,26 @@ module Fixjour
       @klass = klass
       @overrides = overrides
     end
+    
+    def protected(*attrs)
+      attrs = attrs.empty? ?
+        @protected :
+        @protected = attrs
+      Set.new(attrs)
+    end
   
     def new(defaults={})
-      @klass.new(defaults.merge(@overrides))
+      attrs = defaults.merge(@overrides)
+      
+      accessible = attrs.keys.inject({ }) do |m, key|
+        next m if protected.include?(key)
+        m[key] = attrs.delete(key)
+        m
+      end
+      
+      returning @klass.new(accessible) do |instance|
+        attrs.each { |key,val| instance.send("#{key}=", val) }
+      end
     end
     
     def method_missing(sym, *args, &block)

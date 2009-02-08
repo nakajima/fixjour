@@ -374,6 +374,27 @@ describe Fixjour do
       end
     end
 
+    describe "protected attributes" do
+      before(:each) do
+        Fixjour.builders.delete(Bar)
+        Bar.attr_protected :name
+        Fixjour do
+          define_builder(Bar) do |klass, overrides|
+            klass.protected :name
+            klass.new :name => "Protect me!"
+          end
+        end
+      end
+      
+      it "returns default value" do
+        new_bar.name.should == "Protect me!"
+      end
+      
+      it "can be overridden" do
+        new_bar(:name => 'pwnd').name.should == 'pwnd'
+      end
+    end
+
     describe "processing overrides" do
       before(:each) do
         Fixjour.builders.delete(Foo)
@@ -403,7 +424,7 @@ describe Fixjour do
         end
       end
 
-      context "when the builder block has one arg" do
+      context "when the builder block has two args" do
         before(:each) do
           Fixjour do
             define_builder(Foo) do |klass, overrides|
@@ -422,7 +443,6 @@ describe Fixjour do
         end
 
         it "merges overrides" do
-          mock.proxy.instance_of(Hash).merge(Fixjour::OverridesHash.new(:alias => "Bart Simpson"))
           new_foo(:alias => "Bart Simpson").name.should == "Bart Simpson"
         end
       end
