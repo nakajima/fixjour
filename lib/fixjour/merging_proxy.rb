@@ -19,20 +19,27 @@ module Fixjour
   
     def new(defaults={})
       attrs = defaults.merge(@overrides)
-      
-      accessible = attrs.keys.inject({ }) do |m, key|
-        next m if protected.include?(key)
-        m[key] = attrs.delete(key)
-        m
-      end
-      
+      accessible, inaccessible = partition(attrs)
       returning @klass.new(accessible) do |instance|
-        attrs.each { |key,val| instance.send("#{key}=", val) }
+        inaccessible.each do |key,val|
+          instance.send("#{key}=", val)
+        end
       end
     end
     
     def method_missing(sym, *args, &block)
       @klass.respond_to?(sym) ? @klass.send(sym, *args, &block) : super
+    end
+    
+    private
+    
+    def partition(attrs)
+      accessible = attrs.keys.inject({ }) do |m, key|
+        next m if protected.include?(key)
+        m[key] = attrs.delete(key)
+        m
+      end
+      [accessible, attrs]
     end
   end
 end
