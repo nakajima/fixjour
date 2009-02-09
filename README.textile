@@ -126,26 +126,6 @@ instead. Why? First, because processing the overrides hash is a smell. Deal
 with it. Second, using the @process@ method provides some indication to readers
 that you're screwing with the overrides hash, and that's a good thing.
 
-h3. Using a default attributes hash
-
-Again, pass @define_builder@ a model class, followed by a hash of
-valid attributes for that model. With this approach, the attribute
-overrides passed to the creation methods will be merged automatically.
-
-Example:
-
-<pre>
-define_builder(Person, :name => "Pat", :age => 22)
-</pre>
-
-This style is simpler, though you get less flexibility to work
-with the overrides hash. I'm not entirely convinced that's a bad
-thing either, since simplicity is key.
-
-*Note: Currently, builders defined using a hash cannot specify
-associated objects using Fixjour creation methods. Attempting to
-do so will raise a @NonBlockBuilderReference@ error.*
-
 h4. With Associations
 
 To specify an associated object, you can call that object's @new_*@ method:
