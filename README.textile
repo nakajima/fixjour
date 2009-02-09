@@ -126,6 +126,18 @@ instead. Why? First, because processing the overrides hash is a smell. Deal
 with it. Second, using the @process@ method provides some indication to readers
 that you're screwing with the overrides hash, and that's a good thing.
 
+h4. @attr_protected@ fields
+
+If you have fields that cannot be mass-assigned, use the @protected@ helper:
+
+  define_builder(Article) do |klass, overrides|
+    klass.protected :author
+    klass.new :title => "The title", :body => "good", :author => new_user
+  end
+
+If you use the @protected@ helper to declare @attr_protected@ fields, you can
+then treat them the same as any other field in your test methods.
+
 h4. With Associations
 
 To specify an associated object, you can call that object's @new_*@ method:
