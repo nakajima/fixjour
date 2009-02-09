@@ -53,11 +53,15 @@ describe Fixjour do
           it "merges overrides" do
             new_foo(:name => nil).name.should be_nil
           end
-
+          
+          it "is indifferent" do
+            new_foo('name' => nil).name.should be_nil
+          end
+          
           it "can be made invalid associated objects" do
             new_foo(:bar => nil).should_not be_valid
           end
-
+          
           it "allows access to other builders" do
             bar = new_bar
             mock(self).new_bar { bar }
@@ -127,6 +131,10 @@ describe Fixjour do
 
         it "merges overrides" do
           new_foo(:name => nil).name.should be_nil
+        end
+        
+        it "is indifferent" do
+          new_foo('name' => nil).name.should be_nil
         end
 
         it "can be made invalid associated objects" do

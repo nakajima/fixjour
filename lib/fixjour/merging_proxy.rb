@@ -20,6 +20,7 @@ module Fixjour
     def new(defaults={})
       attrs = defaults.merge(@overrides)
       accessible, inaccessible = partition(attrs)
+      
       returning @klass.new(accessible) do |instance|
         inaccessible.each do |key,val|
           instance.send("#{key}=", val)

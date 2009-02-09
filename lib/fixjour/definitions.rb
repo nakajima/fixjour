@@ -3,7 +3,7 @@ module Fixjour
     # Defines the new_* method
     def define_new(klass, &block)
       define_method("new_#{name_for(klass)}") do |*args|
-        Generator.new(klass, block).call(self, args.extract_options!)
+        Generator.new(klass, block).call(self, args.extract_options!.symbolize_keys!)
       end
     end
   
