@@ -19,13 +19,11 @@ module Fixjour
     # Defines the valid_*_attributes method
     def define_valid_attributes(name)
       define_method("valid_#{name}_attributes") do |*args|
-        valid_attributes = send("new_#{name}").attributes
+        valid_attributes = send("new_#{name}", *args).attributes
         valid_attributes.delete_if { |key, value| value.nil? }
-        overrides = args.extract_options!
-        attrs = valid_attributes.merge(overrides)
-        attrs.stringify_keys!
-        attrs.make_indifferent!
-        attrs
+        valid_attributes.stringify_keys!
+        valid_attributes.make_indifferent!
+        valid_attributes
       end
     end
   end
