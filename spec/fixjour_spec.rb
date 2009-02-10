@@ -32,8 +32,8 @@ describe Fixjour do
           before(:each) do
             Fixjour.builders.delete(Foo)
             Fixjour do
-              define_builder(Foo) do |overrides|
-                Foo.new({ :name => 'Foo Namery', :bar => new_bar }.merge(overrides))
+              define_builder(Foo) do |klass|
+                klass.new(:name => 'Foo Namery', :bar => new_bar)
               end
             end
           end
@@ -147,33 +147,6 @@ describe Fixjour do
           new_foo.bar.should == bar
         end
       end
-
-      context "passing a hash" do
-        it "returns a new model object" do
-          new_bazz.should be_kind_of(Bazz)
-        end
-
-        it "is a new record" do
-          new_bazz.should be_new_record
-        end
-
-        it "returns defaults specified in block" do
-          new_bazz.name.should == 'Bazz Namery'
-        end
-
-        it "merges overrides" do
-          new_bazz(:name => nil).name.should be_nil
-        end
-
-        it "does not allow access to other builders" do
-          Fixjour.builders.delete(Bazz)
-          proc {
-            Fixjour do
-              define_builder(Bazz, :bar => new_bar)
-            end
-          }.should raise_error(Fixjour::NonBlockBuilderReference)
-        end
-      end
     end
 
     describe "create_* methods" do
@@ -240,11 +213,15 @@ describe Fixjour do
         valid_foo_attributes(:name => "as attr")["name"].should == "as attr"
       end
 
-      it "memoizes valid model object" do
-        mock.proxy(self).new_foo.once
-        valid_foo_attributes
-        valid_foo_attributes
-        valid_foo_attributes
+      describe "returning new values every time" do
+        before(:each) do
+          FooBar.validates_uniqueness_of :name
+          create_foo_bar(valid_foo_bar_attributes)
+        end
+        
+        it "returns new values every time" do
+          new_foo_bar(valid_foo_bar_attributes).should be_valid
+        end
       end
 
       context "declared with a hash" do
@@ -409,26 +386,14 @@ describe Fixjour do
       end
 
       context "when the builder block has one arg" do
-        before(:each) do
-          Fixjour do
-            define_builder(Foo) do |overrides|
-              overrides.process(:alias) do |value|
-                overrides[:name] = value
-              end
-
-              Foo.new({ :name => "El Nameo!" }.merge(overrides))
+        it "is raises DeprecatedMergeAttempt when #process is called" do
+          proc {
+            Fixjour.define_builder(Foo) do |overrides|
+              overrides.process(:alias) { |v| overrides[:name] = v }
             end
-          end
-        end
-
-        it "returns a new Fixjour::OverridesHash" do
-          mock.proxy(Fixjour::OverridesHash).new(:alias => "Bart Simpson")
-          new_foo(:alias => "Bart Simpson")
-        end
-
-        it "merges overrides" do
-          mock.proxy.instance_of(Hash).merge(Fixjour::OverridesHash.new(:alias => "Bart Simpson"))
-          new_foo(:alias => "Bart Simpson").name.should == "Bart Simpson"
+            
+            new_foo
+          }.should raise_error(Fixjour::DeprecatedMergeAttempt)
         end
       end
 

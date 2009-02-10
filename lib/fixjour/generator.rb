@@ -19,7 +19,7 @@ module Fixjour
   
     def args(overrides)
       case block.arity
-      when 1 then [overrides]
+      when 1 then [MergingProxy.new(klass, overrides)]
       when 2 then [MergingProxy.new(klass, overrides), overrides]
       end
     end

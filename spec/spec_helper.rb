@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'spec'
+require 'faker'
 require 'rr'
 
 begin
@@ -51,18 +52,20 @@ end
 def define_all_builders
   Fixjour.builders.clear
   Fixjour do
-    define_builder(Foo) do |overrides|
-      Foo.new({ :name => 'Foo Namery', :bar => new_bar }.merge(overrides))
+    define_builder(Foo) do |klass, overrides|
+      klass.new({ :name => 'Foo Namery', :bar => new_bar }.merge(overrides))
     end
 
-    define_builder(Bar) do |overrides|
-      Bar.new({ :name => "Bar Namery" }.merge(overrides))
+    define_builder(Bar) do |klass, overrides|
+      klass.new({ :name => "Bar Namery" }.merge(overrides))
     end
 
-    define_builder(FooBar) do |overrides|
-      FooBar.new
+    define_builder(FooBar) do |klass, overrides|
+      klass.new(:name => Faker::Name.name)
     end
 
-    define_builder(Bazz, :name => "Bazz Namery")
+    define_builder(Bazz) do |klass|
+      klass.new(:name => "Bazz Namery")
+    end
   end
 end

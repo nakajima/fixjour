@@ -23,4 +23,11 @@ module Fixjour
   # Raised when a builder is defined for a class that already
   # has one.
   class RedundantBuilder < StandardError; end
+  
+  # Raised when a builder is defined with one block argument and
+  # the user assumes that it's the overrides hash. This used to
+  # be the standard behavior, but now blocks with one argument
+  # are passed the class proxy, and getting access to the overrides
+  # hash requires you pass two block arguments.
+  class DeprecatedMergeAttempt < StandardError; end
 end

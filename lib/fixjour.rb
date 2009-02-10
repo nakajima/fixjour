@@ -12,6 +12,7 @@ require 'fixjour/errors'
 require 'fixjour/generator'
 require 'fixjour/definitions'
 require 'fixjour/builders'
+require 'fixjour/deprecation'
 
 # This method is just for prettiness
 def Fixjour(options={}, &block)
