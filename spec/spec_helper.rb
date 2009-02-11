@@ -63,7 +63,7 @@ def define_all_builders
     end
 
     define_builder(FooBar) do |klass, overrides|
-      klass.new(:name => Faker::Name.name)
+      klass.new(:name => "foobar-#{succ}")
     end
 
     define_builder(Bazz) do |klass|

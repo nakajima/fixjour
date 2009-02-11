@@ -10,6 +10,14 @@ describe Fixjour do
       self.should_not respond_to(:new_foo)
     end
   end
+  
+  describe "count" do
+    it "is incremented by succ" do
+      proc {
+        Fixjour.succ
+      }.should change(Fixjour::Counter, :count)
+    end
+  end
 
   describe "when Fixjour is included" do
     include Fixjour
