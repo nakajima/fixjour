@@ -68,6 +68,31 @@ describe Fixjour do
             new_foo.bar.should == bar
           end
         end
+        
+        context "when passed a hash" do
+          before(:each) do
+            Fixjour.builders.delete(Foo)
+            Fixjour do
+              define_builder(Foo, :name => 'Foo Namery')
+            end
+          end
+
+          it "returns a new model object" do
+            new_foo.should be_kind_of(Foo)
+          end
+
+          it "is a new record" do
+            new_foo.should be_new_record
+          end
+
+          it "returns defaults specified in block" do
+            new_foo.name.should == 'Foo Namery'
+          end
+
+          it "merges overrides" do
+            new_foo(:name => nil).name.should be_nil
+          end
+        end
 
         context "when it returns a hash" do
           before(:each) do
@@ -356,6 +381,26 @@ describe Fixjour do
             }.should_not raise_error
           end
         end
+      end
+    end
+    
+    describe "a virtual attribute" do
+      before(:each) do
+        Fixjour.builders.delete(Foo)
+        Foo.class_eval { attr_accessor :bizzle }
+        Fixjour do
+          define_builder(Foo) do |klass, overrides|
+            klass.new(:bizzle => 'fizzle')
+          end
+        end
+      end
+      
+      it "gets preserved" do
+        new_foo.bizzle.should == 'fizzle'
+      end
+      
+      it "is overrideable" do
+        new_foo(:bizzle => 'bliggety').bizzle.should == 'bliggety'
       end
     end
 

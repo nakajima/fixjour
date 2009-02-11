@@ -17,8 +17,8 @@ module Fixjour
       if block_given?
         define_new(klass, &block)
       else
-        define_new(klass) do |overrides|
-          klass.new(options.merge(overrides))
+        define_new(klass) do |proxy, overrides|
+          proxy.new(options.merge(overrides))
         end
       end
 
