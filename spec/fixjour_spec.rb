@@ -383,6 +383,26 @@ describe Fixjour do
         end
       end
     end
+    
+    describe "a virtual attribute" do
+      before(:each) do
+        Fixjour.builders.delete(Foo)
+        Foo.class_eval { attr_accessor :bizzle }
+        Fixjour do
+          define_builder(Foo) do |klass, overrides|
+            klass.new(:bizzle => 'fizzle')
+          end
+        end
+      end
+      
+      it "gets preserved" do
+        new_foo.bizzle.should == 'fizzle'
+      end
+      
+      it "is overrideable" do
+        new_foo(:bizzle => 'bliggety').bizzle.should == 'bliggety'
+      end
+    end
 
     describe "protected attributes" do
       before(:each) do

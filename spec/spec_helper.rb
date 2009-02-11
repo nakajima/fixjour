@@ -19,6 +19,8 @@ end
 include ActsAsFu
 
 build_model(:foos) do
+  attr_accessor :bizzle
+  
   string :name
   integer :age
   integer :bar_id
