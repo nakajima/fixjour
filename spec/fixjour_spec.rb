@@ -68,6 +68,31 @@ describe Fixjour do
             new_foo.bar.should == bar
           end
         end
+        
+        context "when passed a hash" do
+          before(:each) do
+            Fixjour.builders.delete(Foo)
+            Fixjour do
+              define_builder(Foo, :name => 'Foo Namery')
+            end
+          end
+
+          it "returns a new model object" do
+            new_foo.should be_kind_of(Foo)
+          end
+
+          it "is a new record" do
+            new_foo.should be_new_record
+          end
+
+          it "returns defaults specified in block" do
+            new_foo.name.should == 'Foo Namery'
+          end
+
+          it "merges overrides" do
+            new_foo(:name => nil).name.should be_nil
+          end
+        end
 
         context "when it returns a hash" do
           before(:each) do
