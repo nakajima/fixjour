@@ -21,18 +21,22 @@ module Fixjour
           error(klass, WrongBuilderType, "must return an instance of #{klass}")
         end
         
-        begin
-          result.save!
-        rescue => e
-          error(klass, UnsavableBuilder, "raises #{e.inspect} when saved to the database")
-        end
+        klass.transaction do
+          begin
+            result.save!
+          rescue => e
+            error(klass, UnsavableBuilder, "raises #{e.inspect} when saved to the database")
+          end
         
-        unless new_record(klass).valid?
-          msg = ""
-          msg << "returns invalid an invalid object after another object has been saved.\n"
-          msg << "This could be caused by a validates_uniqueness_of validation in your model.\n"
-          msg << "Use something like the faker gem to alleviate this issue."
-          error(klass, DangerousBuilder, msg)
+          unless new_record(klass).valid?
+            msg = ""
+            msg << "returns invalid an invalid object after another object has been saved.\n"
+            msg << "This could be caused by a validates_uniqueness_of validation in your model.\n"
+            msg << "Use something like the faker gem to alleviate this issue."
+            error(klass, DangerousBuilder, msg)
+          end
+          
+          raise ActiveRecord::Rollback
         end
       end
     end

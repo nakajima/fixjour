@@ -10,6 +10,20 @@ describe Fixjour, ".verify!" do
     mock(Fixjour).verify!.once
     Fixjour(:verify => true) { }
   end
+  
+  describe "clearing the transaction" do
+    before(:each) do
+      Fixjour do
+        define_builder(Foo) { |overrides| Foo.new(:name => 'ok', :bar => new_bar) }
+      end
+    end
+    
+    it "rolls back the transaction" do
+      proc {
+        Fixjour.verify!
+      }.should_not change(Foo, :count)
+    end
+  end
 
   context "when the builder returns an invalid object" do
     context "when the validations are not related to uniqueness" do
