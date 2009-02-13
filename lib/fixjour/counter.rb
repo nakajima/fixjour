@@ -13,7 +13,7 @@ module Fixjour
       @counters[key][]
     end
 
-    def counter(key)
+    def counter(key=nil)
       Counter.counter(key)
     end
   end

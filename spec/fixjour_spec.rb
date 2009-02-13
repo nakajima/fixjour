@@ -17,6 +17,12 @@ describe Fixjour do
     before(:each) do
       Fixjour::Counter.reset
     end
+    
+    it "provides default counter" do
+      counter.should == 1
+      counter.should == 2
+      counter.should == 3
+    end
 
     it "should increase" do
       counter(:foo).should == 1
