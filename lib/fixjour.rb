@@ -11,6 +11,7 @@ require 'fixjour/verify'
 require 'fixjour/errors'
 require 'fixjour/generator'
 require 'fixjour/definitions'
+require 'fixjour/counter'
 require 'fixjour/builders'
 require 'fixjour/deprecation'
 

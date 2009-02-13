@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
     "lib/core_ext/object.rb",
     "lib/fixjour",
     "lib/fixjour/builders.rb",
+    "lib/fixjour/counter.rb",
     "lib/fixjour/definitions.rb",
     "lib/fixjour/deprecation.rb",
     "lib/fixjour/errors.rb",

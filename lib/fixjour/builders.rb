@@ -1,4 +1,5 @@
 module Fixjour
+  include Counter
   class << self
     include Definitions
 
