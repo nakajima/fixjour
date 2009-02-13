@@ -20,7 +20,7 @@ include ActsAsFu
 
 build_model(:foos) do
   attr_accessor :bizzle
-  
+
   string :name
   integer :age
   integer :bar_id
@@ -38,7 +38,7 @@ end
 build_model(:bazzs) do
   string :name
   integer :bar_id
-  
+
   belongs_to :bar
 end
 
@@ -63,7 +63,7 @@ def define_all_builders
     end
 
     define_builder(FooBar) do |klass, overrides|
-      klass.new(:name => "foobar-#{succ}")
+      klass.new(:name => "foobar-#{counter(:foobar)}")
     end
 
     define_builder(Bazz) do |klass|

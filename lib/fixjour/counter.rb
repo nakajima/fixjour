@@ -1,21 +1,20 @@
 module Fixjour
-  def succ
-    Counter.count += 1
-  end
-  
-  module_function :succ
-  
   module Counter
-    class << self
-      attr_writer :count
+    def self.reset(key=nil)
+      if key
+        @counters[key] = lambda {s||=0; s+=1}
+      else
+        @counters = Hash.new {|h,k| s||=0; c=lambda{s+=1}; h[k]=c}
+      end
     end
-    
-    def self.count
-      @count ||= 0
+    reset
+
+    def self.counter(key)
+      @counters[key].call
     end
-    
-    def count
-      Counter.count
+
+    def counter(key)
+      Counter.counter key
     end
   end
 end
