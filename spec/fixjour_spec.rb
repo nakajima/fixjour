@@ -13,6 +13,7 @@ describe Fixjour do
 
   describe "counter" do
     include Fixjour
+
     before(:each) do
       Fixjour::Counter.reset
     end
