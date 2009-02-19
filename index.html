@@ -10,7 +10,7 @@
 	<style type="text/css">
 		body {
   		margin-top: 1.0em;
-  		background-color: #00aaff;
+  		background-color: #fff;
 		  font-family: "helvetica"; 
   		color: #000000;
     }
@@ -22,11 +22,11 @@
 		h1 .small { font-size: 0.4em; }
 		h1 a { text-decoration: none }
 		h2 { font-size: 1.5em; color: #ff5500; }
-    h3 { text-align: center; color: #ff5500; }
+    h3 { color: #ff5500; }
     a { color: #ff5500; }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
-		pre { background: #000; color: #fff; padding: 15px;}
+		pre { background: #fafafa; color: #222; padding: 15px; border: 1px solid #eee;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
 	</style>
@@ -48,48 +48,49 @@
     <h1><a href="http://github.com/nakajima/fixjour">fixjour</a> 
       <span class="small">by <a href="http://github.com/nakajima">nakajima</a></small></h1>
 
-    <div class="description">
+    <h4>
       Word to your object mother.
-    </div>
+    </h4>
 
-    <p>h1. fixjour
+    <p>
+      Another fixture replacement. Gets you some methods (<code>new_*</code>, <code>create_*</code> and
+      <code>valid_*_attributes</code>) and some confidence.
+    </p>
 
-Another fixture replacement. Gets you some methods (@new_*@, @create_*@ and
-@valid_*_attributes@) methods and some confidence.
+    <h2>Liberation through constraints.</h2>
 
-h2. The focus of this project is liberation through constraints.
+    <h3>One builder per model</h3>
 
-It uses the bits of object mother systems that worked well for
-me in the past, and actively discourages the bits that have caused
-me pain.
+    <p>
+      If you try to define a builder more than once per model, you'll
+      run into a @Fixjour::RedundantBuilder@ error. One builder per
+      model decreases confusion.
+    </p>
+    
 
-The constraints:
+    <h3>No redundant object creation methods</h3>
+    
+    <p>
+      If you try to define a method that's already been defined by
+      a Fixjour builder, you'll run into a @Fixjour::RedundantBuilder@
+      error. If you find the need to alter the behavior of a builder
+      for a particular set of tests, you should just wrap the creation
+      methods defined by Fixjour, preferably with a name that describes
+      how the new method is different from the Fixjour method.
+    </p>
 
-h4. One builder per model
+    <h3>Processing the overrides hash is bad</h3>
 
-If you try to define a builder more than once per model, you'll
-run into a @Fixjour::RedundantBuilder@ error. One builder per
-model decreases confusion.
+    <p>
+      If you want to mess with the overrides hash that can be passed
+      into any of the creation methods, you must use the <code>process</code>
+      method (see below). To enforce this, the <code>delete</code> method is actually
+      private for the overrides hash.
+    </p>
 
-h4. No redundant object creation methods
+    <h2>Usage</h2>
 
-If you try to define a method that's already been defined by
-a Fixjour builder, you'll run into a @Fixjour::RedundantBuilder@
-error. If you find the need to alter the behavior of a builder
-for a particular set of tests, you should just wrap the creation
-methods defined by Fixjour, preferably with a name that describes
-how the new method is different from the Fixjour method.
-
-h4. Processing the overrides hash is bad
-
-If you want to mess with the overrides hash that can be passed
-into any of the creation methods, you must use the @process@
-method (see below). To enforce this, the @delete@ method is actually
-private for the overrides hash.
-
-h2. What it gets you:
-
-With this setup:
+    <p>With this setup:</p>
 
 <pre>
 Fixjour do
@@ -101,46 +102,58 @@ end
 include Fixjour
 </pre>
 
-You get:
+    <p>You get:</p>
 
-h3. @new_person(overrides={})@
+    <h3><code>new_person(overrides={})</code></h3>
 
-The @new_person@ method basically just returns the result
-of your builder block, which should *always return an unsaved
-instance of the model class*. You can pass it overrides in a
-hash like so: @new_person(:name => nil)@.
+    <p>
+      The <code>new_person</code> method basically just returns the result
+      of your builder block, which should *always return an unsaved
+      instance of the model class*. You can pass it overrides in a
+      hash like so: @new_person(:name => nil)@.
+    </p>
 
-h3. @create_person(overrides={})@
 
-The @create_person@ method calls @new_person@, passing in any
-overrides you pass it, calls @save!@ on the result, and returns
-the saved object.
+    <h3><code>create_person(overrides={})</code></h3>
+    
+    <p>
+      The <code>create_person</code> method calls <code>new_person</code>, passing in any
+      overrides you pass it, calls @save!@ on the result, and returns
+      the saved object.
+    </p>
 
-h3. @valid_person_attributes(overrides={})@
+    <h3><code>valid_person_attributes(overrides={})</code></h3>
 
-The @valid_person_attributes@ returns a hash of valid person
-attributes that are derived from the @new_person@ method, and
-ideal for things like testing controllers. It can also take
-attribute override options like so: @valid_person_attributes(:name => nil)@.
+    <p>
+      The <code>valid_person_attributes</code> returns a hash of valid person
+      attributes that are derived from the <code>new_person</code> method, and
+      ideal for things like testing controllers. It can also take
+      attribute override options like so: @valid_person_attributes(:name => nil)@.
+    </p>
 
-h2. Usage:
+    <h2>Builders</h2>
 
-You specify builder sets for your ActiveRecord models in a
-@Fixjour@ block using the @define_builder@ helper, which can
-be used in one of two ways:
+    <p>
+      You specify builder sets for your ActiveRecord models in a
+      <code>Fixjour</code> block using the <code>define_builder</code> helper, which can
+      be used in one of two ways:
+    </p>
+    
+    <h3>Using a builder block</h3>
 
-h3. Using a builder block
+    <p>
+      Pass <code>define_builder</code> a model class for which you want a new set
+      of creation methods, and a block which returns a new valid
+      model object. The block will be passed two arguments: a proxy
+      object for your class, and an overrides hash. If you call <code>new</code>
+      on the class proxy, it will return a new instance of the class,
+      with whatever attributes you specify as defaults. It will also
+      automatically merge any override options in all of the methods
+      generated by Fixjour.
+    </p>
+    
 
-Pass @define_builder@ a model class for which you want a new set
-of creation methods, and a block which returns a new valid
-model object. The block will be passed two arguments: a proxy
-object for your class, and an overrides hash. If you call @new@
-on the class proxy, it will return a new instance of the class,
-with whatever attributes you specify as defaults. It will also
-automatically merge any override options in all of the methods
-generated by Fixjour.
-
-Example:
+    <p>Example:</p>
 
 <pre>
 define_builder(Person) do |klass, overrides|
@@ -148,15 +161,17 @@ define_builder(Person) do |klass, overrides|
 end
 </pre>
 
-If you want to process an option in the overrides hash, you can use
-the @process@ method:
+    <p>
+      If you want to process an option in the overrides hash, you can use
+      the <code>process</code> method:
+    </p>
 
 <pre>
 define_builder(Person) do |klass, overrides|
   overrides.process(:child) do |is_child|
     overrides[:age] = 14 if is_child
   end
-  
+
   klass.new(:name => "Pat", :age => 22)
 end
 
@@ -169,38 +184,43 @@ person = new_person(:child => true)
 person.age  # => 14
 </pre>
 
-In the above example, the @:child@ key will be deleted from the @overrides@
-hash and made available as the @is_child@ block argument where you can handle
-things accordingly.
+    <p>In the above example, the @:child@ key will be deleted from the <code>overrides</code>
+    hash and made available as the <code>is_child</code> block argument where you can handle
+    things accordingly.</p>
+    
+    <p>
+      <strong>Note:</strong> The <code>delete</code> method is private on the overrides hash passed into the
+      builder block. This is meant to encourage you to only use the <code>process</code> method
+      instead. Why? First, because processing the overrides hash is a smell. Deal
+      with it. Second, using the <code>process</code> method provides some indication to readers
+      that you're screwing with the overrides hash, and that's a good thing.
+    </p>
+    
 
-*Note:* The @delete@ method is private on the overrides hash passed into the
-builder block. This is meant to encourage you to only use the @process@ method
-instead. Why? First, because processing the overrides hash is a smell. Deal
-with it. Second, using the @process@ method provides some indication to readers
-that you're screwing with the overrides hash, and that's a good thing.
+    <h3><code>attr_protected</code> fields</h3>
 
-h4. @attr_protected@ fields
-
-If you have fields that cannot be mass-assigned, use the @protected@ helper:
-
-  define_builder(Article) do |klass, overrides|
-    klass.protected :author
-    klass.new :title => "The title", :body => "good", :author => new_user
-  end
-
-If you use the @protected@ helper to declare @attr_protected@ fields, you can
-then treat them the same as any other field in your test methods.
-
-h4. With Associations
-
-To specify an associated object, you can call that object's @new_*@ method:
+    <p>If you have fields that cannot be mass-assigned, use the <code>protected</code> helper:</p>
 
 <pre>
+define_builder(Article) do |klass, overrides|
+  klass.protected :author
+  klass.new :title => "The title", :body => "good", :author => new_user
+end  
+</pre>
+
+    <p>If you use the <code>protected</code> helper to declare <code>attr_protected</code> fields, you can
+    then treat them the same as any other field in your test methods.</p>
+
+    <h3>With Associations</h3>
+
+    <p>To specify an associated object, you can call that object's <code>new_*</code> method:</p>
+
+    <pre>
 Fixjour do
   define_builder(Post) do |klass, overrides|
     klass.new(:name => 'a post', :body => 'texted')
   end
-  
+
   define_builder(Comment) do |klass, overrides|
     klass.new(:body => 'Oh ok!', :post => new_post)
   end
@@ -211,66 +231,65 @@ include Fixjour
 new_comment.post.name # => 'a post'
 </pre>
 
-Note that it's never a good idea to use a @create_*@ method in a
-build block.
+    <p>Note that it's never a good idea to use a <code>create_*</code> method in a
+    build block.</p>
 
-h3. Verifying your setups
+    <h3>Verifying your setups</h3>
 
-Fixjour requires more work on your part, so it also includes a way
-to verify that your creation methods are behaving the way they should.
-Call @Fixjour.verify!@ to ensure the following things:
+    <p>Fixjour requires more work on your part, so it also includes a way
+    to verify that your creation methods are behaving the way they should.
+    Call @Fixjour.verify!@ to ensure the following things:</p>
 
-# Creation methods are returning valid objects by default.
-# @new_*@ methods are returning new records.
-# @new_*@ and @create_*@ methods return instances of the correct class.
+    <ol>
+      <li>Creation methods are returning valid objects by default.</li>
+      <li><code>new_*</code> methods are returning new records.</li>
+      <li><code>new_*</code> and <code>create_*</code> methods return instances of the correct class.</li>
+    </ol>
 
-h3. Recommended usage with RSpec and Cucumber
+    <h3>Recommended usage with RSpec and Cucumber</h3>
 
-If you want to use Fixjour with RSpec and Cucumber you probably want to avoid adding the builder methods onto Object directly.  To do this you should first create a file where your Fixjour builder definitions can live.  Say for example you put it at spec/fixjour_builders.rb.  To take advantage of these builders from RSpec use the following code in your spec_helper.rb:
+    <p>If you want to use Fixjour with RSpec and Cucumber you probably want to avoid adding the builder methods onto Object directly.  To do this you should first create a file where your Fixjour builder definitions can live.  Say for example you put it at spec/fixjour_builders.rb.  To take advantage of these builders from RSpec use the following code in your spec_helper.rb:</p>
 
-<pre>
-require File.expand_path(File.dirname(__FILE__) + "/fixjour_builders.rb")
+<pre>require File.expand_path(File.dirname(__FILE__) + "/fixjour_builders.rb")
 
 Spec::Runner.configure do |config|
-  config.include(Fixjour) # This will add the builder methods to your ExampleGroups and not pollute Object
+  # Add the builder methods to your ExampleGroups without polluting Object
+  config.include(Fixjour) 
   ...
-end
-</pre>
+end</pre>
 
-To use the same builders in Cucumber you simply need to include Fixjour into your Wolrd object from features/support/env.rb:
+    <p>To use the same builders in Cucumber you simply need to include Fixjour into your World object
+    from features/support/env.rb:</p>
 
-<pre>
+    <pre>
 require File.expand_path(File.dirname(__FILE__) +'/../../spec/fixjour_builders.rb')
-World { |world| world.extend(Fixjour) }
-</pre>
+World { |world| world.extend(Fixjour) }</pre>
 
-Be sure to do this after you define your World object.  So, if you are using Rails you should include Fixjour after you require 'cucumber/rails/world'.
+    <p>Be sure to do this after you define your World object.  So, if you are using Rails you should
+    include Fixjour after you require 'cucumber/rails/world'.</p>
 
-h4. Contributors
+    <h3>Contributors</h3>
 
-* "Pat Maddox":http://github.com/pat-maddox - Sparked the original idea and fixed my bugs
-* "Ben Mabey":http://github.com/bmabey - Added docs and fixed my bugs
-* "Aaron Quint":http://github.com/quirkey - Pointed out valid attrs problem and fixed my bugs
+    <ul>
+      <li><a href="http://github.com/pat-maddox">Pat Maddox</a> - Sparked the original idea and fixed my bugs</li>
+      <li><a href="http://github.com/bmabey">Ben Mabey</a> - Added docs and fixed my bugs</li>
+      <li><a href="http://github.com/mdalessio">Mike Dalessio</a> - Argued with me over syntax (in a good way) and fixed my bugs</li>
+      <li><a href="http://github.com/quirkey">Aaron Quint</a> - Pointed out valid attrs problem and fixed my bugs</li>
+    </ul>
 
-h4. TODO
+    <h3><a href="http://ci.patnakajima.com/fixjour">View the CI build.</a></h3>
 
-* There should be a @Builder@ class.
+    <p>I've talked to smart people who like these instead:</p>
 
-h4. "View the CI build.":http://ci.patnakajima.com/fixjour
-
-I've talked to smart people who like these instead:
-
-* "fixturereplacement":http://github.com/smtlaissezfaire/fixturereplacement/tree/master
-* "factory girl":http://github.com/thoughtbot/factory_girl/tree
-
-(c) Copyright 2008 Pat Nakajima, released under MIT License.
+    <h4><a href="http://github.com/smtlaissezfaire/fixturereplacement/tree/master">fixturereplacement</a></h4>
+    <h4><a href="http://github.com/thoughtbot/factory_girl/tree">factory girl</a></h4>
 
 </p><h2>Dependencies</h2>
 <p>activerecord</p>
 <h2>Install</h2>
 <p>gem install fixjour</p>
 <h2>License</h2>
-<p>Copyright (c) 2009 Pat Nakajima
+<pre>Copyright (c) 2009 Pat Nakajima
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -291,11 +310,10 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
 HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.</p>
-<h2>Authors</h2>
-<p>Pat Nakajima (patnakajima@gmail.com)<br/>Pat Maddox (pat.maddox@gmail.com)<br/>Ben Mabey (ben@benmabey.com)<br/>Mike Dalessio (mike@csa.net)<br/>Aaron Quint (aaron@quirkey.com)<br/></p>
+OTHER DEALINGS IN THE SOFTWARE.</pre>
 <h2>Contact</h2>
-<p>Pat Nakajima (patnakajima@gmail.com)<br/>      </p>
+<p>Pat Nakajima (patnakajima@gmail.com)
+<br/>      </p>
 
 
     <h2>Download</h2>
