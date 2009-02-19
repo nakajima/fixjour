@@ -27,6 +27,7 @@
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
 		pre { background: #fafafa; color: #222; padding: 15px; border: 1px solid #eee;}
+		code { background: #fafafa; color: #222; border: 1px solid #eee; }
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
 	</style>
@@ -63,7 +64,7 @@
 
     <p>
       If you try to define a builder more than once per model, you'll
-      run into a @Fixjour::RedundantBuilder@ error. One builder per
+      run into a <code>Fixjour::RedundantBuilder</code> error. One builder per
       model decreases confusion.
     </p>
     
@@ -72,7 +73,7 @@
     
     <p>
       If you try to define a method that's already been defined by
-      a Fixjour builder, you'll run into a @Fixjour::RedundantBuilder@
+      a Fixjour builder, you'll run into a <code>Fixjour::RedundantBuilder</code>
       error. If you find the need to alter the behavior of a builder
       for a particular set of tests, you should just wrap the creation
       methods defined by Fixjour, preferably with a name that describes
@@ -110,7 +111,7 @@ include Fixjour
       The <code>new_person</code> method basically just returns the result
       of your builder block, which should *always return an unsaved
       instance of the model class*. You can pass it overrides in a
-      hash like so: @new_person(:name => nil)@.
+      hash like so: <code>new_person(:name => nil)</code>.
     </p>
 
 
@@ -118,7 +119,7 @@ include Fixjour
     
     <p>
       The <code>create_person</code> method calls <code>new_person</code>, passing in any
-      overrides you pass it, calls @save!@ on the result, and returns
+      overrides you pass it, calls <code>save!</code> on the result, and returns
       the saved object.
     </p>
 
@@ -128,7 +129,7 @@ include Fixjour
       The <code>valid_person_attributes</code> returns a hash of valid person
       attributes that are derived from the <code>new_person</code> method, and
       ideal for things like testing controllers. It can also take
-      attribute override options like so: @valid_person_attributes(:name => nil)@.
+      attribute override options like so: <code>valid_person_attributes(:name => nil)</code>.
     </p>
 
     <h2>Builders</h2>
@@ -184,7 +185,7 @@ person = new_person(:child => true)
 person.age  # => 14
 </pre>
 
-    <p>In the above example, the @:child@ key will be deleted from the <code>overrides</code>
+    <p>In the above example, the <code>:child</code> key will be deleted from the <code>overrides</code>
     hash and made available as the <code>is_child</code> block argument where you can handle
     things accordingly.</p>
     
@@ -238,7 +239,7 @@ new_comment.post.name # => 'a post'
 
     <p>Fixjour requires more work on your part, so it also includes a way
     to verify that your creation methods are behaving the way they should.
-    Call @Fixjour.verify!@ to ensure the following things:</p>
+    Call <code>Fixjour.verify!</code> to ensure the following things:</p>
 
     <ol>
       <li>Creation methods are returning valid objects by default.</li>
