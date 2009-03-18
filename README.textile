@@ -3,6 +3,8 @@ h1. fixjour
 Another fixture replacement. Gets you some methods (@new_*@, @create_*@ and
 @valid_*_attributes@) methods and some confidence.
 
+"View the RDoc":http://gitrdoc.com/nakajima/fixjour/tree/master (still underway, but has a bit of helpful stuff)
+
 h2. The focus of this project is liberation through constraints.
 
 It uses the bits of object mother systems that worked well for
