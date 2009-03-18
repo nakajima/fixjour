@@ -1,5 +1,8 @@
 module Fixjour
-  include Counter
+  def counter(key=nil)
+    Counter.counter(key)
+  end
+
   class << self
     include Definitions
 

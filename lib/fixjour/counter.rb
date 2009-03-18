@@ -1,20 +1,30 @@
 module Fixjour
-  module Counter
-    def self.reset(key=nil)
-      if key
-        @counters[key] = lambda { s ||= 0; s += 1 }
-      else
-        @counters = Hash.new { |h,k| s ||= 0; c = lambda { s += 1 }; h[k] = c }
+  class Counter
+    class << self
+      def reset(key=nil)
+        key ? counters.delete(key) : counters.clear
+      end
+
+      def counter(key)
+        counters[key] ||= new
+        counters[key].next
+      end
+
+      private
+
+      def counters
+        @counters ||= {}
       end
     end
+
     reset
 
-    def self.counter(key)
-      @counters[key][]
+    def initialize
+      @value = 0
     end
 
-    def counter(key=nil)
-      Counter.counter(key)
+    def next
+      @value += 1
     end
   end
 end
