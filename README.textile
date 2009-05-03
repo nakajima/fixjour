@@ -5,6 +5,17 @@ Another fixture replacement. Gets you some methods (@new_*@, @create_*@ and
 
 "View the RDoc":http://gitrdoc.com/nakajima/fixjour/tree/master (still underway, but has a bit of helpful stuff)
 
+h2. Contribute
+
+Fixjour has some developer dependencies.  Install them as shown below,
+and run rake to make sure the tests pass.  Then dive in!
+
+<pre>
+fixjour:$ gem build fixjour.gemspec
+fixjour:$ sudo gem install --development fixjour
+fixjour:$ rake
+Do the tests pass?
+</pre>
 h2. The focus of this project is liberation through constraints.
 
 It uses the bits of object mother systems that worked well for
