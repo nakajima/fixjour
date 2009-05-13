@@ -49,7 +49,7 @@ describe Fixjour do
 
   describe "when Fixjour is included" do
     include Fixjour
-
+    
     describe "new_* methods" do
       it "generates new_[model] method" do
         proc {
@@ -66,7 +66,7 @@ describe Fixjour do
       context "passing a builder block with one arg" do
         context "when it returns a model object" do
           before(:each) do
-            Fixjour.builders.delete(Foo)
+            Fixjour.remove(Foo)
             Fixjour do
               define_builder(Foo) do |klass|
                 klass.new(:name => 'Foo Namery', :bar => new_bar)
@@ -107,7 +107,7 @@ describe Fixjour do
 
         context "when passed a hash" do
           before(:each) do
-            Fixjour.builders.delete(Foo)
+            Fixjour.remove(Foo)
             Fixjour do
               define_builder(Foo, :name => 'Foo Namery')
             end
@@ -132,7 +132,7 @@ describe Fixjour do
 
         context "when it returns a hash" do
           before(:each) do
-            Fixjour.builders.delete(Foo)
+            Fixjour.remove(Foo)
             Fixjour do
               define_builder(Foo) do |overrides|
                 { :name => 'Foo Namery', :bar => new_bar }
@@ -170,7 +170,7 @@ describe Fixjour do
 
       context "passing a builder block with two args" do
         before(:each) do
-          Fixjour.builders.delete(Foo)
+          Fixjour.remove(Foo)
           Fixjour do
             define_builder(Foo) do |klass, overrides|
               klass.new({ :name => 'Foo Namery', :bar => new_bar })
@@ -295,7 +295,7 @@ describe Fixjour do
     describe "Fixjour.builders" do
       it "contains the classes for which there are builders" do
         Fixjour.should have(4).builders
-        Fixjour.builders.should include(Foo, Bar, Bazz)
+        Fixjour.builders.map(&:klass).should include(Foo, Bar, Bazz)
       end
 
       context "when defining multiple builders for same class" do
@@ -422,7 +422,7 @@ describe Fixjour do
 
     describe "a virtual attribute" do
       before(:each) do
-        Fixjour.builders.delete(Foo)
+        Fixjour.remove(Foo)
         Foo.class_eval { attr_accessor :bizzle }
         Fixjour do
           define_builder(Foo) do |klass, overrides|
@@ -442,7 +442,7 @@ describe Fixjour do
 
     describe "protected attributes" do
       before(:each) do
-        Fixjour.builders.delete(Bar)
+        Fixjour.remove(Bar)
         Bar.attr_protected :name
         Fixjour do
           define_builder(Bar) do |klass, overrides|
@@ -463,7 +463,7 @@ describe Fixjour do
 
     describe "processing overrides" do
       before(:each) do
-        Fixjour.builders.delete(Foo)
+        Fixjour.remove(Foo)
       end
 
       context "when the builder block has one arg" do
