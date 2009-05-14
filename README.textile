@@ -1,8 +1,9 @@
 h1. fixjour
 
-Another fixture replacement. Gets you @new_*@, @create_*@ and
-@valid_*_attributes@ methods that you probably write yourself
-anyway.
+Another fixture replacement. Gets you some methods (@new_*@, @create_*@ and
+@valid_*_attributes@) methods and some confidence.
+
+"View the RDoc":http://gitrdoc.com/nakajima/fixjour/tree/master (still underway, but has a bit of helpful stuff)
 
 h2. The focus of this project is liberation through constraints.
 
@@ -184,7 +185,7 @@ Spec::Runner.configure do |config|
 end
 </pre>
 
-To use the same builders in Cucumber you simply need to include Fixjour into your Wolrd object from features/support/env.rb:
+To use the same builders in Cucumber you simply need to include Fixjour into your World object from features/support/env.rb:
 
 <pre>
 require File.expand_path(File.dirname(__FILE__) +'/../../spec/fixjour_builders.rb')
@@ -192,6 +193,15 @@ World { |world| world.extend(Fixjour) }
 </pre>
 
 Be sure to do this after you define your World object.  So, if you are using Rails you should include Fixjour after you require 'cucumber/rails/world'.
+
+In *Cucumber version 0.2.3.2 and later* you need to pass in a module to the World method to extend it:
+
+<pre>
+require File.expand_path(File.dirname(__FILE__) +'/../../spec/fixjour_builders.rb')
+World(Fixjour)
+</pre>
+
+(See the Cucumber::StepMother#World RDoc or "http://wiki.github.com/aslakhellesoy/cucumber/a-whole-new-world":http://wiki.github.com/aslakhellesoy/cucumber/a-whole-new-world.)
 
 h4. Contributors
 
@@ -203,7 +213,7 @@ h4. TODO
 
 * There should be a @Builder@ class.
 
-h4. "View the CI build.":http://ci.patnakajima.com/fixjour
+h4. "Join the mailing list.":http://groups.google.com/group/fixjour
 
 I've talked to smart people who like these instead:
 

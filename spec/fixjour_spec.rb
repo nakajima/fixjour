@@ -11,9 +11,45 @@ describe Fixjour do
     end
   end
 
-  describe "when Fixjour is included" do
+  describe "counter" do
     include Fixjour
 
+    before(:each) do
+      Fixjour::Counter.reset
+    end
+
+    it "provides default counter" do
+      counter.should == 1
+      counter.should == 2
+      counter.should == 3
+    end
+
+    it "should increase" do
+      counter(:foo).should == 1
+      counter(:foo).should == 2
+      counter(:foo).should == 3
+    end
+
+    it "should allow multiple counters" do
+      counter(:foo).should == 1
+      counter(:foo).should == 2
+      counter(:bar).should == 1
+      counter(:foo).should == 3
+      counter(:bar).should == 2
+    end
+
+    it "should allow resetting a single counter" do
+      counter(:foo).should == 1
+      counter(:bar).should == 1
+      Fixjour::Counter.reset :foo
+      counter(:foo).should == 1
+      counter(:bar).should == 2
+    end
+  end
+
+  describe "when Fixjour is included" do
+    include Fixjour
+    
     describe "new_* methods" do
       it "generates new_[model] method" do
         proc {
@@ -30,7 +66,7 @@ describe Fixjour do
       context "passing a builder block with one arg" do
         context "when it returns a model object" do
           before(:each) do
-            Fixjour.builders.delete(Foo)
+            Fixjour.remove(Foo)
             Fixjour do
               define_builder(Foo) do |klass|
                 klass.new(:name => 'Foo Namery', :bar => new_bar)
@@ -53,25 +89,25 @@ describe Fixjour do
           it "merges overrides" do
             new_foo(:name => nil).name.should be_nil
           end
-          
+
           it "is indifferent" do
             new_foo('name' => nil).name.should be_nil
           end
-          
+
           it "can be made invalid associated objects" do
             new_foo(:bar => nil).should_not be_valid
           end
-          
+
           it "allows access to other builders" do
             bar = new_bar
             mock(self).new_bar { bar }
             new_foo.bar.should == bar
           end
         end
-        
+
         context "when passed a hash" do
           before(:each) do
-            Fixjour.builders.delete(Foo)
+            Fixjour.remove(Foo)
             Fixjour do
               define_builder(Foo, :name => 'Foo Namery')
             end
@@ -96,7 +132,7 @@ describe Fixjour do
 
         context "when it returns a hash" do
           before(:each) do
-            Fixjour.builders.delete(Foo)
+            Fixjour.remove(Foo)
             Fixjour do
               define_builder(Foo) do |overrides|
                 { :name => 'Foo Namery', :bar => new_bar }
@@ -134,7 +170,7 @@ describe Fixjour do
 
       context "passing a builder block with two args" do
         before(:each) do
-          Fixjour.builders.delete(Foo)
+          Fixjour.remove(Foo)
           Fixjour do
             define_builder(Foo) do |klass, overrides|
               klass.new({ :name => 'Foo Namery', :bar => new_bar })
@@ -157,7 +193,7 @@ describe Fixjour do
         it "merges overrides" do
           new_foo(:name => nil).name.should be_nil
         end
-        
+
         it "is indifferent" do
           new_foo('name' => nil).name.should be_nil
         end
@@ -243,7 +279,7 @@ describe Fixjour do
           FooBar.validates_uniqueness_of :name
           create_foo_bar(valid_foo_bar_attributes)
         end
-        
+
         it "returns new values every time" do
           new_foo_bar(valid_foo_bar_attributes).should be_valid
         end
@@ -259,7 +295,7 @@ describe Fixjour do
     describe "Fixjour.builders" do
       it "contains the classes for which there are builders" do
         Fixjour.should have(4).builders
-        Fixjour.builders.should include(Foo, Bar, Bazz)
+        Fixjour.builders.map(&:klass).should include(Foo, Bar, Bazz)
       end
 
       context "when defining multiple builders for same class" do
@@ -383,10 +419,10 @@ describe Fixjour do
         end
       end
     end
-    
+
     describe "a virtual attribute" do
       before(:each) do
-        Fixjour.builders.delete(Foo)
+        Fixjour.remove(Foo)
         Foo.class_eval { attr_accessor :bizzle }
         Fixjour do
           define_builder(Foo) do |klass, overrides|
@@ -394,11 +430,11 @@ describe Fixjour do
           end
         end
       end
-      
+
       it "gets preserved" do
         new_foo.bizzle.should == 'fizzle'
       end
-      
+
       it "is overrideable" do
         new_foo(:bizzle => 'bliggety').bizzle.should == 'bliggety'
       end
@@ -406,7 +442,7 @@ describe Fixjour do
 
     describe "protected attributes" do
       before(:each) do
-        Fixjour.builders.delete(Bar)
+        Fixjour.remove(Bar)
         Bar.attr_protected :name
         Fixjour do
           define_builder(Bar) do |klass, overrides|
@@ -415,11 +451,11 @@ describe Fixjour do
           end
         end
       end
-      
+
       it "returns default value" do
         new_bar.name.should == "Protect me!"
       end
-      
+
       it "can be overridden" do
         new_bar(:name => 'pwnd').name.should == 'pwnd'
       end
@@ -427,7 +463,7 @@ describe Fixjour do
 
     describe "processing overrides" do
       before(:each) do
-        Fixjour.builders.delete(Foo)
+        Fixjour.remove(Foo)
       end
 
       context "when the builder block has one arg" do
@@ -436,7 +472,7 @@ describe Fixjour do
             Fixjour.define_builder(Foo) do |overrides|
               overrides.process(:alias) { |v| overrides[:name] = v }
             end
-            
+
             new_foo
           }.should raise_error(Fixjour::DeprecatedMergeAttempt)
         end

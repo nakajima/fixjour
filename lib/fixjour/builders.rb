@@ -1,4 +1,8 @@
 module Fixjour
+  def counter(key=nil)
+    Counter.counter(key)
+  end
+
   class << self
     include Definitions
 
@@ -12,20 +16,19 @@ module Fixjour
     # This method should always return a valid instance of
     # a model object.
     def define_builder(klass, options={}, &block)
-      add_builder(klass)
+      builder = Builder.new(klass, :as => options.delete(:as))
+      add_builder(builder)
 
       if block_given?
-        define_new(klass, &block)
+        define_new(builder, &block)
       else
-        define_new(klass) do |proxy, overrides|
+        define_new(builder) do |proxy, overrides|
           proxy.new(options.merge(overrides))
         end
       end
 
-      name = name_for(klass)
-
-      define_create(name)
-      define_valid_attributes(name)
+      define_create(builder)
+      define_valid_attributes(builder)
     end
 
     # Adds builders to Fixjour.
@@ -44,9 +47,14 @@ module Fixjour
     # Checks to see whether or not a builder is defined. Duh.
     def builder_defined?(builder)
       case builder
-      when Class          then builders.include?(builders)
-      when String, Symbol then builders.map(&:name).include?(builder)
+      when Class  then builders.map(&:klass).include?(builders)
+      when String then builders.map(&:name).include?(builder)
+      when Symbol then builders.map(&:name).include?(builder.to_s)
       end
+    end
+
+    def remove(builder)
+      builders.delete(Builder.new(builder))
     end
 
     private
@@ -54,9 +62,9 @@ module Fixjour
     # Registers a class' builder. This allows us to make sure
     # redundant builders aren't defined, which can lead to confusion
     # when trying to figure out where objects are being created.
-    def add_builder(klass)
-      unless builders.add?(klass) or Fixjour.allow_redundancy
-        raise RedundantBuilder.new("You already defined a builder for #{klass.inspect}")
+    def add_builder(builder)
+      unless builders.add?(builder) or Fixjour.allow_redundancy
+        raise RedundantBuilder.new("You already defined a builder for #{builder.klass.inspect}")
       end
     end
 
