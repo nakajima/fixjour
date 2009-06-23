@@ -6,7 +6,7 @@ module Fixjour
         Generator.new(builder.klass, block).call(self, args.extract_options!.symbolize_keys!)
       end
     end
-  
+
     # Defines the create_* method
     def define_create(builder)
       define_method("create_#{builder.name}") do |*args|
@@ -15,7 +15,7 @@ module Fixjour
         model
       end
     end
-  
+
     # Defines the valid_*_attributes method
     def define_valid_attributes(builder)
       define_method("valid_#{builder.name}_attributes") do |*args|

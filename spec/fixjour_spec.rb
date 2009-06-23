@@ -49,7 +49,7 @@ describe Fixjour do
 
   describe "when Fixjour is included" do
     include Fixjour
-    
+
     describe "new_* methods" do
       it "generates new_[model] method" do
         proc {
