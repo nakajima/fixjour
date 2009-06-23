@@ -73,7 +73,10 @@ describe Fixjour, ".verify!" do
     before(:each) do
       Fixjour.builders.clear
 
-      klass = build_model(:bars) { string :name }
+      klass = build_model(:bars) {
+        string :name
+        has_many :people
+      }
 
       bar_bomb = Object.new
       stub(bar_bomb).save! { raise ActiveRecord::StatementInvalid.new("oops!") }

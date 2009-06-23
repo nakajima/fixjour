@@ -34,6 +34,8 @@ end
 
 build_model(:bars) do
   string :name
+
+  has_many :people
 end
 
 build_model(:bazzs) do
@@ -50,6 +52,7 @@ end
 build_model(:people) do
   string :first_name
   string :last_name
+  integer :bar_id
 end
 
 def define_all_builders
@@ -60,7 +63,7 @@ def define_all_builders
     end
 
     define_builder(Bar) do |klass, overrides|
-      klass.new({ :name => "Bar Namery" }.merge(overrides))
+      klass.new({ :name => "Bar Namery", :people => [new_person] }.merge(overrides))
     end
 
     define_builder(FooBar) do |klass, overrides|
@@ -70,7 +73,7 @@ def define_all_builders
     define_builder(Bazz) do |klass|
       klass.new(:name => "Bazz Namery")
     end
-    
+
     define_builder Person do |klass|
       klass.new
     end

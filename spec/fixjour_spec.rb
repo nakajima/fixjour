@@ -274,14 +274,23 @@ describe Fixjour do
         valid_foo_attributes(:name => "as attr")["name"].should == "as attr"
       end
 
-      it "handles associated objects" do
-        valid_foo_attributes[:bar].should be_nil
-        valid_foo_attributes[:bar_id].should_not be_nil
+      describe "singular association ids" do
+        it "sets appropriate foreign keys" do
+          valid_foo_attributes[:bar].should be_nil
+          valid_foo_attributes[:bar_id].should_not be_nil
+        end
+
+        it "respects custom foreign keys" do
+          valid_foo_attributes[:owner].should be_nil
+          valid_foo_attributes[:person_id].should_not be_nil
+        end
       end
 
-      it "respects other associated objects custom foreign keys" do
-        valid_foo_attributes[:owner].should be_nil
-        valid_foo_attributes[:person_id].should_not be_nil
+      describe "plural association ids" do
+        it "sets appropriate foreign keys" do
+          valid_bar_attributes[:people].should be_nil
+          valid_bar_attributes[:people_ids].should_not be_empty
+        end
       end
 
       describe "returning new values every time" do
