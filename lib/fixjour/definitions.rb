@@ -19,8 +19,21 @@ module Fixjour
     # Defines the valid_*_attributes method
     def define_valid_attributes(builder)
       define_method("valid_#{builder.name}_attributes") do |*args|
-        valid_attributes = send("new_#{builder.name}", *args).attributes
+        record = send("new_#{builder.name}", *args)
+        valid_attributes = record.attributes
         valid_attributes.delete_if { |key, value| value.nil? }
+
+        transfer_ids = proc { |reflection|
+          if associated = record.send(reflection.name)
+            associated.new_record? && associated.save!
+            key = reflection.options[:foreign_key] || reflection.name.to_s + '_id'
+            valid_attributes[key] = associated.id
+          end
+        }
+
+        record.class.reflect_on_all_associations(:has_one).each(&transfer_ids)
+        record.class.reflect_on_all_associations(:belongs_to).each(&transfer_ids)
+
         valid_attributes.stringify_keys!
         valid_attributes.make_indifferent!
         valid_attributes

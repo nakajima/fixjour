@@ -274,6 +274,16 @@ describe Fixjour do
         valid_foo_attributes(:name => "as attr")["name"].should == "as attr"
       end
 
+      it "handles associated objects" do
+        valid_foo_attributes[:bar].should be_nil
+        valid_foo_attributes[:bar_id].should_not be_nil
+      end
+
+      it "respects other associated objects custom foreign keys" do
+        valid_foo_attributes[:owner].should be_nil
+        valid_foo_attributes[:person_id].should_not be_nil
+      end
+
       describe "returning new values every time" do
         before(:each) do
           FooBar.validates_uniqueness_of :name
@@ -294,7 +304,7 @@ describe Fixjour do
 
     describe "Fixjour.builders" do
       it "contains the classes for which there are builders" do
-        Fixjour.should have(4).builders
+        Fixjour.should have(5).builders
         Fixjour.builders.map(&:klass).should include(Foo, Bar, Bazz)
       end
 

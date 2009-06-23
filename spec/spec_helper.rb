@@ -23,8 +23,10 @@ build_model(:foos) do
   string :name
   integer :age
   integer :bar_id
+  integer :person_id
 
   belongs_to :bar
+  belongs_to :owner, :foreign_key => :person_id, :class_name => 'Person'
 
   validates_presence_of :bar, :message => "BAR AIN'T THURR"
   validates_presence_of :name
@@ -54,7 +56,7 @@ def define_all_builders
   Fixjour.builders.clear
   Fixjour do
     define_builder(Foo) do |klass, overrides|
-      klass.new({ :name => 'Foo Namery', :bar => new_bar }.merge(overrides))
+      klass.new({ :name => 'Foo Namery', :bar => new_bar, :owner => new_person }.merge(overrides))
     end
 
     define_builder(Bar) do |klass, overrides|
@@ -67,6 +69,10 @@ def define_all_builders
 
     define_builder(Bazz) do |klass|
       klass.new(:name => "Bazz Namery")
+    end
+    
+    define_builder Person do |klass|
+      klass.new
     end
   end
 end
