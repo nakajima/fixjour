@@ -1,3 +1,4 @@
+require 'cgi'
 require 'spec'
 require 'faker'
 require 'rr'
@@ -10,6 +11,12 @@ rescue LoadError
 end
 
 require File.dirname(__FILE__) + '/../lib/fixjour'
+
+def pre(*args)
+  args.each { |arg|
+    puts '<pre>' + CGI.escapeHTML(arg.is_a?(String) ? arg : arg.inspect) + '</pre>'
+  }
+end
 
 Spec::Runner.configure do |c|
   c.mock_with(:rr)
@@ -36,6 +43,7 @@ build_model(:bars) do
   string :name
 
   has_many :people
+  has_many :foos
 end
 
 build_model(:bazzs) do

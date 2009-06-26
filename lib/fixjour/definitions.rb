@@ -31,19 +31,20 @@ module Fixjour
           end
         }
 
-        record.class.reflect_on_all_associations(:has_one).each(&transfer_singular_ids)
-        record.class.reflect_on_all_associations(:belongs_to).each(&transfer_singular_ids)
-
         transfer_plural_ids = proc { |reflection|
-          if associated = record.send(reflection.name)
+          associated = record.send(reflection.name)
+          if associated.length > 0
             associated.each { |rec| rec.new_record? && rec.save! }
-            key = reflection.options[:foreign_key] || reflection.name.to_s + '_id'
-            valid_attributes[key.to_s + 's'] = associated.map(&:id)
+            key = (reflection.options[:foreign_key] || reflection.name).to_s
+            key.gsub!(/_ids?$/, '')
+            valid_attributes[key.singularize + '_ids'] = associated.map(&:id)
             valid_attributes.delete(reflection.name)
           end
         }
 
-        record.class.reflect_on_all_associations(:has_many).each(&transfer_plural_ids)
+        builder.klass.reflect_on_all_associations(:has_one).each(&transfer_singular_ids)
+        builder.klass.reflect_on_all_associations(:belongs_to).each(&transfer_singular_ids)
+        builder.klass.reflect_on_all_associations(:has_many).each(&transfer_plural_ids)
 
         valid_attributes.stringify_keys!
         valid_attributes.make_indifferent!

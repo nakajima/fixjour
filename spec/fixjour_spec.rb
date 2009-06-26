@@ -289,7 +289,11 @@ describe Fixjour do
       describe "plural association ids" do
         it "sets appropriate foreign keys" do
           valid_bar_attributes[:people].should be_nil
-          valid_bar_attributes[:people_ids].should_not be_empty
+          valid_bar_attributes[:person_ids].should_not be_empty
+        end
+
+        it "leaves out blank keys" do
+          valid_bar_attributes.should_not have_key('foo_ids')
         end
       end
 
