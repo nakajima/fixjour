@@ -5,6 +5,8 @@ Another fixture replacement. Gets you some methods (@new_*@, @create_*@ and
 
 "View the RDoc":http://gitrdoc.com/nakajima/fixjour/tree/master (still underway, but has a bit of helpful stuff)
 
+"Recommend Me on the Working with Rails":http://www.workingwithrails.com/person/7973-pat-nakajima
+
 h2. Contribute
 
 Fixjour has some developer dependencies. Install them as shown below,
