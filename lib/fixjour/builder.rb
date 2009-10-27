@@ -7,7 +7,7 @@ module Fixjour
     end
 
     def name
-      @name ||= (@options[:as] || @klass.name.underscore).to_s
+      @name ||= (@options[:as] || @klass.name.underscore).to_s.gsub(/\W+/, '_')
     end
 
     def eql?(other)

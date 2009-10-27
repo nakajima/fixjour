@@ -16,4 +16,9 @@ describe Fixjour::Builder do
   it "can infer name" do
     new_builder(Foo).name.should == 'foo'
   end
+
+  it "can infer nested name" do
+    class Foo; class Bar; end end
+    new_builder(Foo::Bar).name.should == 'foo_bar'
+  end
 end
