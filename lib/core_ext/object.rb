@@ -1,6 +1,8 @@
-class Object
-  def tap
-    yield self
-    self
+unless respond_to?(:tap)
+  class Object
+    def tap
+      yield self
+      self
+    end
   end
 end
