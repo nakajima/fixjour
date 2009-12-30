@@ -8,6 +8,18 @@ module Fixjour
 
     attr_accessor :allow_redundancy
 
+    def prohibit_redundancy!
+      @always_allow_redundancy = false
+    end
+
+    def allow_redundancy!
+      @always_allow_redundancy = true
+    end
+
+    def allow_redundancy?
+      @always_allow_redundancy || @allow_redundancy
+    end
+
     # The list of classes that have builders defined.
     def builders
       @builders ||= Set.new
@@ -63,7 +75,7 @@ module Fixjour
     # redundant builders aren't defined, which can lead to confusion
     # when trying to figure out where objects are being created.
     def add_builder(builder)
-      unless builders.add?(builder) or Fixjour.allow_redundancy
+      unless builders.add?(builder) or Fixjour.allow_redundancy?
         raise RedundantBuilder.new("You already defined a builder for #{builder.klass.inspect}")
       end
     end

@@ -358,6 +358,33 @@ describe Fixjour do
               end
             }.should raise_error(Fixjour::RedundantBuilder)
           end
+
+          it "can always allow redundancy" do
+            Fixjour do
+              allow_redundancy!
+              define_builder(Bar) { Bar.new }
+            end
+            proc {
+              Class.new {
+                include Fixjour
+                def new_bar(*args) end
+              }
+            }.should_not raise_error
+          end
+
+          it "can prohibit redundancy" do
+            Fixjour do
+              allow_redundancy!
+              prohibit_redundancy!
+              define_builder(Bar) { Bar.new }
+            end
+            proc {
+              Class.new {
+                include Fixjour
+                def new_bar(*args) end
+              }
+            }.should raise_error(Fixjour::RedundantBuilder)
+          end
         end
 
         describe "method_added hook" do

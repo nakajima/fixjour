@@ -1,6 +1,6 @@
 module Fixjour
   def self.included(klass)
-    klass.extend(RedundancyChecker)
+    klass.extend(RedundancyChecker) unless Fixjour.allow_redundancy?
   end
 
   # Uses method_added hook to make sure no redundant builder methods
