@@ -318,7 +318,7 @@ describe Fixjour do
     describe "Fixjour.builders" do
       it "contains the classes for which there are builders" do
         Fixjour.should have(5).builders
-        Fixjour.builders.map(&:klass).should include(Foo, Bar, Bazz)
+        Fixjour.builders.values.map(&:klass).should include(Foo, Bar, Bazz)
       end
 
       context "when defining multiple builders for same class" do

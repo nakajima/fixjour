@@ -22,7 +22,7 @@ module Fixjour
 
     # The list of classes that have builders defined.
     def builders
-      @builders ||= Set.new
+      @builders ||= {}
     end
 
     # This method should always return a valid instance of
@@ -60,14 +60,14 @@ module Fixjour
     # Checks to see whether or not a builder is defined. Duh.
     def builder_defined?(builder)
       case builder
-      when Class  then builders.map(&:klass).include?(builders)
-      when String then builders.map(&:name).include?(builder)
-      when Symbol then builders.map(&:name).include?(builder.to_s)
+      when Class  then builders.values.map(&:klass).include?(builders)
+      when String then builders.values.map(&:name).include?(builder)
+      when Symbol then builders.values.map(&:name).include?(builder.to_s)
       end
     end
 
-    def remove(builder)
-      builders.delete(Builder.new(builder))
+    def remove(klass)
+      builders.delete(Builder.new(klass).name)
     end
 
     private
@@ -76,8 +76,10 @@ module Fixjour
     # redundant builders aren't defined, which can lead to confusion
     # when trying to figure out where objects are being created.
     def add_builder(builder)
-      unless builders.add?(builder) or Fixjour.allow_redundancy?
+      if builders.has_key?(builder.name) and not Fixjour.allow_redundancy?
         raise RedundantBuilder.new("You already defined a builder for #{builder.klass.inspect}")
+      else
+        builders[builder.name] = builder
       end
     end
 
