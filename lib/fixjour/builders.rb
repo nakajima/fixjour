@@ -49,7 +49,8 @@ module Fixjour
         module_eval(&block)
       rescue NameError => e
         if e.name && evaluator.respond_to?(e.name)
-          raise NonBlockBuilderReference.new("You must use a builder block in order to reference other Fixjour creation methods.")
+          raise NonBlockBuilderReference.new \
+            "You must use a builder block in order to reference other Fixjour creation methods."
         else
           raise e
         end
