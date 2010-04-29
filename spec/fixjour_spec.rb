@@ -49,7 +49,7 @@ describe Fixjour do
 
   describe "when Fixjour is included" do
     include Fixjour
-    
+
     describe "new_* methods" do
       it "generates new_[model] method" do
         proc {
@@ -274,6 +274,29 @@ describe Fixjour do
         valid_foo_attributes(:name => "as attr")["name"].should == "as attr"
       end
 
+      describe "singular association ids" do
+        it "sets appropriate foreign keys" do
+          valid_foo_attributes[:bar].should be_nil
+          valid_foo_attributes[:bar_id].should_not be_nil
+        end
+
+        it "respects custom foreign keys" do
+          valid_foo_attributes[:owner].should be_nil
+          valid_foo_attributes[:person_id].should_not be_nil
+        end
+      end
+
+      describe "plural association ids" do
+        it "sets appropriate foreign keys" do
+          valid_bar_attributes[:people].should be_nil
+          valid_bar_attributes[:person_ids].should_not be_empty
+        end
+
+        it "leaves out blank keys" do
+          valid_bar_attributes.should_not have_key('foo_ids')
+        end
+      end
+
       describe "returning new values every time" do
         before(:each) do
           FooBar.validates_uniqueness_of :name
@@ -294,8 +317,8 @@ describe Fixjour do
 
     describe "Fixjour.builders" do
       it "contains the classes for which there are builders" do
-        Fixjour.should have(4).builders
-        Fixjour.builders.map(&:klass).should include(Foo, Bar, Bazz)
+        Fixjour.should have(5).builders
+        Fixjour.builders.values.map(&:klass).should include(Foo, Bar, Bazz)
       end
 
       context "when defining multiple builders for same class" do
@@ -333,6 +356,33 @@ describe Fixjour do
               Fixjour do
                 define_builder(Bar) { Bar.new }
               end
+            }.should raise_error(Fixjour::RedundantBuilder)
+          end
+
+          it "can always allow redundancy" do
+            Fixjour do
+              allow_redundancy!
+              define_builder(Bar) { Bar.new }
+            end
+            proc {
+              Class.new {
+                include Fixjour
+                def new_bar(*args) end
+              }
+            }.should_not raise_error
+          end
+
+          it "can prohibit redundancy" do
+            Fixjour do
+              allow_redundancy!
+              prohibit_redundancy!
+              define_builder(Bar) { Bar.new }
+            end
+            proc {
+              Class.new {
+                include Fixjour
+                def new_bar(*args) end
+              }
             }.should raise_error(Fixjour::RedundantBuilder)
           end
         end

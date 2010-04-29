@@ -5,6 +5,19 @@ Another fixture replacement. Gets you some methods (@new_*@, @create_*@ and
 
 "View the RDoc":http://gitrdoc.com/nakajima/fixjour/tree/master (still underway, but has a bit of helpful stuff)
 
+"Recommend Me on the Working with Rails":http://www.workingwithrails.com/person/7973-pat-nakajima
+
+h2. Contribute
+
+Fixjour has some developer dependencies. Install them as shown below,
+and run rake to make sure the tests pass. Then dive in!
+
+<pre>
+fixjour:$ gem build fixjour.gemspec
+fixjour:$ sudo gem install --development fixjour
+fixjour:$ rake
+Do the tests pass?
+</pre>
 h2. The focus of this project is liberation through constraints.
 
 It uses the bits of object mother systems that worked well for
@@ -174,7 +187,7 @@ Call @Fixjour.verify!@ to ensure the following things:
 
 h3. Recommended usage with RSpec and Cucumber
 
-If you want to use Fixjour with RSpec and Cucumber you probably want to avoid adding the builder methods onto Object directly.  To do this you should first create a file where your Fixjour builder definitions can live.  Say for example you put it at spec/fixjour_builders.rb.  To take advantage of these builders from RSpec use the following code in your spec_helper.rb:
+If you want to use Fixjour with RSpec and Cucumber you probably want to avoid adding the builder methods onto Object directly. To do this you should first create a file where your Fixjour builder definitions can live. Say for example you put it at spec/fixjour_builders.rb. To take advantage of these builders from RSpec use the following code in your spec_helper.rb:
 
 <pre>
 require File.expand_path(File.dirname(__FILE__) + "/fixjour_builders.rb")
@@ -192,7 +205,7 @@ require File.expand_path(File.dirname(__FILE__) +'/../../spec/fixjour_builders.r
 World { |world| world.extend(Fixjour) }
 </pre>
 
-Be sure to do this after you define your World object.  So, if you are using Rails you should include Fixjour after you require 'cucumber/rails/world'.
+Be sure to do this after you define your World object. So, if you are using Rails you should include Fixjour after you require 'cucumber/rails/world'.
 
 In *Cucumber version 0.2.3.2 and later* you need to pass in a module to the World method to extend it:
 

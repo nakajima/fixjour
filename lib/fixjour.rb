@@ -1,7 +1,6 @@
 $LOAD_PATH << File.dirname(__FILE__)
 
-require 'rubygems'
-require 'activerecord'
+require 'active_record'
 require 'core_ext/hash'
 require 'core_ext/object'
 require 'fixjour/merging_proxy'

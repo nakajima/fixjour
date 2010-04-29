@@ -6,7 +6,7 @@ module Fixjour
     # * The new_* methods return new records
     # * The creation methods return objects of the proper type
     def verify!
-      builders.each do |builder|
+      builders.each do |name, builder|
         klass = builder.klass
         result = new_record(builder)
 

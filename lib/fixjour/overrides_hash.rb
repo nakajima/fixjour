@@ -4,11 +4,11 @@ module Fixjour
   # method private and add the ability to process.
   class OverridesHash < Hash
     private :delete
-    
+
     def initialize(hash)
       replace(hash)
     end
-    
+
     # Allows for processing of the overrides hash. Deletes
     # the option when it's present, then yields the value.
     def process(option)

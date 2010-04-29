@@ -1,0 +1,4 @@
+git://github.com/rspec/rspec.git
+git://github.com/btakita/rr.git
+git://github.com/nakajima/acts_as_fu.git
+faker
