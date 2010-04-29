@@ -47,6 +47,9 @@ module Fixjour
           builder.klass.reflect_on_all_associations(:belongs_to).each(&transfer_singular_ids)
           builder.klass.reflect_on_all_associations(:has_many).each(&transfer_plural_ids)
         elsif builder.klass.respond_to?(:associations)
+          # MongoMapper doesnt support reflections on associations.
+          # This little check allows almost identical support
+          # for MongoMapper even with the associations.
           builder.klass.associations.each do |name, association|
             if [:one, :belongs_to].include?(association.type)
               transfer_singular_ids.call(association)
