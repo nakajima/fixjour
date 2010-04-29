@@ -22,7 +22,7 @@ module Fixjour
         record = send("new_#{builder.name}", *args)
         valid_attributes = record.attributes
         valid_attributes.delete_if { |key, value| value.nil? }
-
+        
         transfer_singular_ids = proc { |reflection|
           if associated = record.send(reflection.name)
             associated.new_record? && associated.save!
@@ -41,11 +41,21 @@ module Fixjour
             valid_attributes.delete(reflection.name)
           end
         }
-
-        builder.klass.reflect_on_all_associations(:has_one).each(&transfer_singular_ids)
-        builder.klass.reflect_on_all_associations(:belongs_to).each(&transfer_singular_ids)
-        builder.klass.reflect_on_all_associations(:has_many).each(&transfer_plural_ids)
-
+        
+        if builder.klass.respond_to?(:reflect_on_all_associations) 
+          builder.klass.reflect_on_all_associations(:has_one).each(&transfer_singular_ids)
+          builder.klass.reflect_on_all_associations(:belongs_to).each(&transfer_singular_ids)
+          builder.klass.reflect_on_all_associations(:has_many).each(&transfer_plural_ids)
+        elsif builder.klass.respond_to?(:associations)
+          builder.klass.associations.each do |name, association|
+            if [:one, :belongs_to].include?(association.type)
+              transfer_singular_ids.call(association)
+            elsif association.type == :many
+              transfer_plural_ids.call(association)
+            end
+          end
+        end
+        
         valid_attributes.stringify_keys!
         valid_attributes.make_indifferent!
         valid_attributes
