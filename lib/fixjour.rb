@@ -15,6 +15,9 @@ require 'fixjour/builder'
 require 'fixjour/builders'
 require 'fixjour/deprecation'
 
+# Syntactic Sugar
+require 'fixjour/define'
+
 # This method is just for prettiness
 def Fixjour(options={}, &block)
   return Fixjour unless block_given?
