@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fixjour}
-  s.version = "0.5.0"
+  s.version = "0.5.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Pat Nakajima"]
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
     "lib/fixjour/counter.rb",
     "lib/fixjour/definitions.rb",
     "lib/fixjour/deprecation.rb",
+    "lib/fixjour/define.rb",
     "lib/fixjour/errors.rb",
     "lib/fixjour/generator.rb",
     "lib/fixjour/merging_proxy.rb",
